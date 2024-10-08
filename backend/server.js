@@ -2,27 +2,27 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import pkg from "pg";
-import universityRoutes from "./Routes/universityRoutes.js";
-import societyRoutes from "./Routes/societyRoutes.js";
-import eventRoutes from "./Routes/eventRoutes.js";
+//import universityRoutes from "./Routes/universityRoutes.js";
+//import societyRoutes from "./Routes/societyRoutes.js";
+//import eventRoutes from "./Routes/eventRoutes.js";
 import authRoutes from "./Routes/authRoutes.js";
-// app.get("/", (req, res) => {
-// res.send("Hello Buddy!");
-// });
 
 dotenv.config();
 const { Pool } = pkg;
 const app = express();
 
-app.arguments(cors());
+// Corrected use of cors
+app.use(cors());
 app.use(express.json());
 
+
+//set this from your .env environment, yours may differ 
 const pool = new Pool({
-  user: process.env.PGUSER,
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  password: process.env.PGPASSWORD,
-  port: process.env.PGPORT,
+  user: process.env.user,
+  host: process.env.host,
+  database: process.env.database,
+  password: process.env.password,
+  port: process.env.PORTDB,
 });
 
 pool.connect((err) => {
@@ -36,16 +36,20 @@ pool.connect((err) => {
 app.get("/", (req, res) => {
   res.send("Hello world from the backend");
 });
+
+//underdevelopment
 app.use("/api/auth", authRoutes);
-app.use("/api/universities", universityRoutes);
-app.use("/api/societies", societyRoutes);
-app.use("/api/events", eventRoutes);
+
+//later 
+// app.use("/api/universities", universityRoutes);
+// app.use("/api/societies", societyRoutes);
+// app.use("/api/events", eventRoutes);
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// app.listen(5000, () => {
-//   console.log("Server is running on the port 5000");
-// });
+
+export default pool;
