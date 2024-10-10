@@ -15,14 +15,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
-//set this from your .env environment, yours may differ 
+//set this from your .env environment, yours may differ
+const connectionString = process.env.PORTDB;
 const pool = new Pool({
-  user: process.env.user,
-  host: process.env.host,
-  database: process.env.database,
-  password: process.env.password,
-  port: process.env.PORTDB,
+  connectionString,
 });
 
 pool.connect((err) => {
@@ -40,7 +36,21 @@ app.get("/", (req, res) => {
 //underdevelopment
 app.use("/api/auth", authRoutes);
 
-//later 
+// ----------------------------------------------------
+
+// get all users (for testing purpose)
+app.use("/api/auth/all", async (req, res) => {
+  try {
+    const all = await pool.query("SELECT * from users");
+    res.json(all.rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ----------------------------------------------------
+
+//later
 // app.use("/api/universities", universityRoutes);
 // app.use("/api/societies", societyRoutes);
 // app.use("/api/events", eventRoutes);
@@ -51,5 +61,6 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-
 export default pool;
+
+
