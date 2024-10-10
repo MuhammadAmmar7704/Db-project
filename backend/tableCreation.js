@@ -19,21 +19,37 @@ const createUniversityTable = async () => {
             name VARCHAR(100) UNIQUE NOT NULL,
             phone VARCHAR(20) NOT NULL,
             address VARCHAR(100) NOT NULL,
-            admin_id VARCHAR(20) UNIQUE
+            admin_id INTEGER UNIQUE,
+            FOREIGN KEY(admin_id) REFERENCES users(user_id)
             );
         `;
     return createTableQuery;
 };
 
 
+const createSocietyTable = async () => {
+  const createTableQuery = `
+          CREATE TABLE IF NOT EXISTS society   (
+          society_id SERIAL PRIMARY KEY,
+          name VARCHAR(100) UNIQUE NOT NULL,
+          university_id INTEGER NOT NULL,
+          admin_id INTEGER UNIQUE,
+          FOREIGN KEY(university_id) REFERENCES university(university_id) ON DELETE CASCADE,
+          FOREIGN KEY(admin_id) REFERENCES users(user_id)
+          );
+      `;
+  return createTableQuery;
+};
+
 const createTables = async (p) => {
     try {
         const userTableQuery = await createUsersTable();
         const universityTableQuery = await createUniversityTable();
+        const societyTableQuery = await createSocietyTable();
 
         await p.query(userTableQuery);
-
         await p.query(universityTableQuery);
+        await p.query(societyTableQuery);
     } catch (error) {
         console.error("Error creating tables:", error);
     }

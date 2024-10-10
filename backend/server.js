@@ -9,6 +9,7 @@ import authRoutes from "./Routes/authRoutes.js";
 //import requestRoutes from "./Routes/requestRoutes.js"; // this logic is removed for the moment
 //import { password } from "pg/lib/defaults.js";
 import universityRoutes from "./Routes/universityRoutes.js";
+import societyRoutes from "./Routes/societyRoutes.js";
 
 dotenv.config();
 const { Pool } = pkg;
@@ -49,8 +50,11 @@ app.get("/", (req, res) => {
 //underdevelopment
 app.use("/api/auth", authRoutes);
 
-//underdevelopement
+//one thing needed in updation, deletion, : need to add authentication
 app.use("/api/university", universityRoutes);
+
+//underdevelopement:
+app.use("/api/society", societyRoutes);
 
 // ----------------------------------------------------
 
@@ -68,8 +72,6 @@ app.use("/api/auth/all", async (req, res) => {
 // ----------------------------------------------------
 
 //later
-// app.use("/api/universities", universityRoutes);
-// app.use("/api/societies", societyRoutes);
 // app.use("/api/events", eventRoutes);
 
 const PORT = process.env.PORT || 5000;
