@@ -1,24 +1,8 @@
 import pool from "../server.js";
 
-//miscellaneous functions ___________
-const createUsersTable = async () => {
-  const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS users (
-        user_id SERIAL PRIMARY KEY,
-        username VARCHAR(100) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        email VARCHAR(100) UNIQUE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `;
-  return createTableQuery;
-};
-
-///////////////
-
 export const signup = async (req, res) => {
   try {
-    const createTableQuery = await createUsersTable();
+    //const createTableQuery = await createUsersTable();
     const result = await pool.query(createTableQuery);
 
     const { username, password, email } = req.body;
