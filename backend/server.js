@@ -6,6 +6,10 @@ import pkg from "pg";
 //import societyRoutes from "./Routes/societyRoutes.js";
 //import eventRoutes from "./Routes/eventRoutes.js";
 import authRoutes from "./Routes/authRoutes.js";
+//import requestRoutes from "./Routes/requestRoutes.js"; // this logic is removed for the moment
+//import { password } from "pg/lib/defaults.js";
+import universityRoutes from "./Routes/universityRoutes.js";
+import societyRoutes from "./Routes/societyRoutes.js";
 
 dotenv.config();
 const { Pool } = pkg;
@@ -15,10 +19,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
 //set this from your .env environment, yours may differ
-const connectionString = process.env.PORTDB;
+const connectionString = process.env.DATABASE_URL;
+const port = process.env.PORTDB;
 const pool = new Pool({
-  connectionString,
+  port,
+  user : process.env.user,
+  host : process.env.host,
+  database : process.env.database,
+  password : process.env.password
 });
 
 pool.connect((err) => {
@@ -29,6 +39,10 @@ pool.connect((err) => {
   }
 });
 
+//create tables 
+import createTables from "./tableCreation.js";
+createTables(pool);
+
 app.get("/", (req, res) => {
   res.send("Hello world from the backend");
 });
@@ -36,12 +50,19 @@ app.get("/", (req, res) => {
 //underdevelopment
 app.use("/api/auth", authRoutes);
 
+//one thing needed in updation, deletion, : need to add authentication
+app.use("/api/university", universityRoutes);
+
+//underdevelopement:
+app.use("/api/society", societyRoutes);
+
 // ----------------------------------------------------
 
 // get all users (for testing purpose)
 app.use("/api/auth/all", async (req, res) => {
   try {
     const all = await pool.query("SELECT * from users");
+    console.log(await pool.query("SELECT table_schema, table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE'; "));
     res.json(all.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -51,8 +72,6 @@ app.use("/api/auth/all", async (req, res) => {
 // ----------------------------------------------------
 
 //later
-// app.use("/api/universities", universityRoutes);
-// app.use("/api/societies", societyRoutes);
 // app.use("/api/events", eventRoutes);
 
 const PORT = process.env.PORT || 5000;

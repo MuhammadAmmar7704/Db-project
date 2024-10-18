@@ -1,50 +1,22 @@
 import pool from "../server.js";
 
-//miscellaneous functions ___________
-const createUsersTable = async () => {
-  const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS users (
-        user_id SERIAL PRIMARY KEY,
-        username VARCHAR(100) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        email VARCHAR(100) UNIQUE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `;
-  return createTableQuery;
-};
-
-///////////////
-
 export const signup = async (req, res) => {
   try {
-    const createTableQuery = await createUsersTable();
-    const result = await pool.query(createTableQuery);
-
+    
     const { username, password, email } = req.body;
 
     if (!username || !password || !email) {
       return res.status(400).json({ error: "Please fill all the fields" });
     }
 
-    // if (password !== confirmPassword) {
-    //   return res.status(400).json({ error: "Passwords do not match" });
-    // }
-
+    
     const user_exists = "SELECT * FROM users where username=$1";
     const exists_query = await pool.query(user_exists, [username]);
 
     if (exists_query.rows.length > 0) {
       return res.status(400).json({ error: "User already exists" });
     }
-    // exists_query = await exists_query.json();
-    // const { existing_username } = exists_query;
-    // console.log(existing_username);
-    // if (username === existing_username) {
-    //   return res.status(400).json({ error: "User already exists" });
-    // }
-    //console.log('Table creation result:', result);
-
+    
     const query = `INSERT INTO users 
         (username, password, email) VALUES ($1,$2,$3)
         RETURNING *`;
@@ -52,8 +24,6 @@ export const signup = async (req, res) => {
 
     const confirm = await pool.query(query, data);
 
-    //console.log(data);
-    // res.json();
     res.status(201).json(result.rows);
   } catch (error) {
     res.send(error);
