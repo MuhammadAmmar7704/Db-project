@@ -10,6 +10,7 @@ import authRoutes from "./Routes/authRoutes.js";
 //import { password } from "pg/lib/defaults.js";
 import universityRoutes from "./Routes/universityRoutes.js";
 import societyRoutes from "./Routes/societyRoutes.js";
+import eventRoutes from "./Routes/eventRoutes.js";
 
 dotenv.config();
 const { Pool } = pkg;
@@ -21,14 +22,10 @@ app.use(express.json());
 
 
 //set this from your .env environment, yours may differ
-const connectionString = process.env.DATABASE_URL;
-const port = process.env.PORTDB;
+const connectionString = process.env.PORTDB2;
+//const port = process.env.port;
 const pool = new Pool({
-  port,
-  user : process.env.user,
-  host : process.env.host,
-  database : process.env.database,
-  password : process.env.password
+  connectionString
 });
 
 pool.connect((err) => {
@@ -53,8 +50,11 @@ app.use("/api/auth", authRoutes);
 //one thing needed in updation, deletion, : need to add authentication
 app.use("/api/university", universityRoutes);
 
-//underdevelopement:
+//done : may add authentication for who is accessing
 app.use("/api/society", societyRoutes);
+
+//underdevelopment
+app.use("/api/event", eventRoutes);
 
 // ----------------------------------------------------
 
@@ -71,8 +71,6 @@ app.use("/api/auth/all", async (req, res) => {
 
 // ----------------------------------------------------
 
-//later
-// app.use("/api/events", eventRoutes);
 
 const PORT = process.env.PORT || 5000;
 

@@ -38,6 +38,40 @@ const createSocietyTable = async () => {
           FOREIGN KEY(admin_id) REFERENCES users(user_id)
           );
       `;
+
+  return createTableQuery;
+};
+
+
+const createStudentTable = async () => {
+  // there would be users who are not associated with university
+  // separate table for students who are associated with any university
+  // only students can head a society and student's Uni and society's Uni should be same
+  const createTableQuery = `
+          CREATE TABLE IF NOT EXISTS student   (
+          student_id INTEGER,
+          university_id INTEGER,
+          FOREIGN KEY(university_id) REFERENCES university(university_id) ON DELETE CASCADE,
+          FOREIGN KEY(student_id) REFERENCES users(user_id) ON DELETE CASCADE,
+          PRIMARY KEY(university_id, student_id)
+          );
+      `;
+  return createTableQuery;
+};
+
+
+const createEventTable = async () => {
+  // there would be users who are not associated with university
+  // separate table for students who are associated with any university
+  // only students can head a society and student's Uni and society's Uni should be same
+  const createTableQuery = `
+          CREATE TABLE IF NOT EXISTS event   (
+          Event_id SERIAL PRIMARY KEY,
+          event_name varchar(50) Unique NOT NULL,
+          society_id INTEGER NOT NULL,
+          FOREIGN KEY(society_id) REFERENCES society(society_id) ON DELETE CASCADE
+          );
+      `;
   return createTableQuery;
 };
 
@@ -46,10 +80,14 @@ const createTables = async (p) => {
         const userTableQuery = await createUsersTable();
         const universityTableQuery = await createUniversityTable();
         const societyTableQuery = await createSocietyTable();
+        const eventTableQuery = await createEventTable();
+        const studentTableQuery = await createStudentTable();
 
         await p.query(userTableQuery);
         await p.query(universityTableQuery);
         await p.query(societyTableQuery);
+        await p.query(eventTableQuery);
+        await p.query(studentTableQuery);
     } catch (error) {
         console.error("Error creating tables:", error);
     }
