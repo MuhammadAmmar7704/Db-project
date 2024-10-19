@@ -6,11 +6,14 @@ import {
   login,
   signup,
   logout,
+  getCurrentUser,
 } from "../Controllers/authController.js";
+import protectRoute from "../Middleware/authMiddleware.js";
 
 router.post("/signup", signup);
 router.post("/login", login);
-router.post("/logout", login);
-router.post("/removeuser", deleteUser);
+router.post("/logout", protectRoute, logout);
+router.post("/removeuser", protectRoute, deleteUser);
+router.get("/", protectRoute, getCurrentUser);
 
 export default router;

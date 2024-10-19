@@ -23,7 +23,6 @@ const createUsersTable = async () => {
 // new_name = ammar.name;
 // {name} = ammar;
 
-
 export const signup = async (req, res) => {
   try {
     const createTableQuery = await createUsersTable();
@@ -144,19 +143,39 @@ export const logout = (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    const {username} = req.body;
+    const { username } = req.body;
 
     if (!username) {
       return res.status(400).json({ error: "Please fill all the fields" });
     }
 
-    const query = "DELETE FROM users WHERE username = $1;"
+    const query = "DELETE FROM users WHERE username = $1;";
     const data = [username];
 
     const confirm = await pool.query(query, data);
-    
+
     res.status(200).json(confirm.rows);
   } catch (error) {
     res.send(error);
+  }
+};
+export const getCurrentUser = async (req, res) => {
+  try {
+    const { user_id } = req.user; // Assuming req.user is populated by protectRoute middleware
+
+    const query =
+      "SELECT user_id, username, email FROM users WHERE user_id = $1";
+    const values = [user_id];
+    const result = await pool.query(query, values);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const user = result.rows[0];
+    res.json(user);
+  } catch (error) {
+    console.error("Error in getCurrentUser:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
