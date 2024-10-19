@@ -14,6 +14,6 @@ router.post("/signup", signup);
 router.post("/login", login);
 router.post("/logout", protectRoute, logout);
 router.post("/removeuser", protectRoute, deleteUser);
-router.get("/", protectRoute, getCurrentUser);
+router.get("/me", protectRoute, getCurrentUser);
 
 export default router;

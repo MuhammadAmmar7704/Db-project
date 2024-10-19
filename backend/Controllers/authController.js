@@ -161,10 +161,10 @@ export const deleteUser = async (req, res) => {
 };
 export const getCurrentUser = async (req, res) => {
   try {
-    const { user_id } = req.user; // Assuming req.user is populated by protectRoute middleware
+    const { user_id, role_id } = req.user; // Assuming req.user is populated by protectRoute middleware
 
     const query =
-      "SELECT user_id, username, email FROM users WHERE user_id = $1";
+      "SELECT u.user_id, u.username, u.email, r.role_name FROM users u join roles r ON r.role_id = u.role_id WHERE u.user_id = $1";
     const values = [user_id];
     const result = await pool.query(query, values);
 
