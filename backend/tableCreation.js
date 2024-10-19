@@ -1,6 +1,5 @@
-
 const createUsersTable = async () => {
-    const createTableQuery = `
+  const createTableQuery = `
         CREATE TABLE IF NOT EXISTS users (
           user_id SERIAL PRIMARY KEY,
           username VARCHAR(100) UNIQUE NOT NULL,
@@ -9,11 +8,11 @@ const createUsersTable = async () => {
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
       `;
-    return createTableQuery;
+  return createTableQuery;
 };
 
 const createUniversityTable = async () => {
-    const createTableQuery = `
+  const createTableQuery = `
             CREATE TABLE IF NOT EXISTS university (
             university_id SERIAL PRIMARY KEY,
             name VARCHAR(100) UNIQUE NOT NULL,
@@ -23,10 +22,8 @@ const createUniversityTable = async () => {
             FOREIGN KEY(admin_id) REFERENCES users(user_id)
             );
         `;
-    return createTableQuery;
+  return createTableQuery;
 };
-
-
 const createSocietyTable = async () => {
   const createTableQuery = `
           CREATE TABLE IF NOT EXISTS society   (
@@ -41,8 +38,6 @@ const createSocietyTable = async () => {
 
   return createTableQuery;
 };
-
-
 const createStudentTable = async () => {
   // there would be users who are not associated with university
   // separate table for students who are associated with any university
@@ -58,8 +53,6 @@ const createStudentTable = async () => {
       `;
   return createTableQuery;
 };
-
-
 const createEventTable = async () => {
   // there would be users who are not associated with university
   // separate table for students who are associated with any university
@@ -74,31 +67,63 @@ const createEventTable = async () => {
       `;
   return createTableQuery;
 };
+const createRolesTable = async () => {
+  const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS roles (
+        role_id SERIAL PRIMARY KEY,
+        role_name VARCHAR(50) UNIQUE NOT NULL
+      );
+    `;
+  return createTableQuery;
+};
+const alterUsersTable = async () => {
+  const alterUsersQuery = `
+    ALTER TABLE users
+    ADD COLUMN role_id INT REFERENCES roles(role_id) DEFAULT 1;
+  `;
+  return alterUsersQuery;
+};
+const insertDefaultRoles = async () => {
+  const insertRolesQuery = `
+    INSERT INTO roles (role_name)
+    VALUES
+      ('User'),
+      ('Student'),
+      ('Society_Head'),
+      ('University_Head'),
+      ('Super_Admin')
+    ON CONFLICT (role_name) DO NOTHING;
+  `;
+  return insertRolesQuery;
+};
 
 const createTables = async (p) => {
-    try {
-        const userTableQuery = await createUsersTable();
-        const universityTableQuery = await createUniversityTable();
-        const societyTableQuery = await createSocietyTable();
-        const eventTableQuery = await createEventTable();
-        const studentTableQuery = await createStudentTable();
+  try {
+    const userTableQuery = await createUsersTable();
+    const universityTableQuery = await createUniversityTable();
+    const societyTableQuery = await createSocietyTable();
+    const eventTableQuery = await createEventTable();
+    const studentTableQuery = await createStudentTable();
+    const rolesTableQuery = await createRolesTable();
+    const defaultRolesQuery = await insertDefaultRoles();
+    const alterUsersTableQuery = await alterUsersTable();
 
-        await p.query(userTableQuery);
-        await p.query(universityTableQuery);
-        await p.query(societyTableQuery);
-        await p.query(eventTableQuery);
-        await p.query(studentTableQuery);
-    } catch (error) {
-        console.error("Error creating tables:", error);
-    }
-}
+    await p.query(userTableQuery);
+    await p.query(universityTableQuery);
+    await p.query(societyTableQuery);
+    await p.query(eventTableQuery);
+    await p.query(studentTableQuery);
+    await p.query(rolesTableQuery);
+    await p.query(defaultRolesQuery);
+
+    // uncomment this, if users does not have a role_id column
+    // await p.query(alterUsersTableQuery);
+  } catch (error) {
+    console.error("Error creating tables:", error);
+  }
+};
 
 export default createTables;
-
-
-
-
-
 
 /* reject this
 

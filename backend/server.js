@@ -11,6 +11,7 @@ import authRoutes from "./Routes/authRoutes.js";
 import universityRoutes from "./Routes/universityRoutes.js";
 import societyRoutes from "./Routes/societyRoutes.js";
 import eventRoutes from "./Routes/eventRoutes.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const { Pool } = pkg;
@@ -19,13 +20,12 @@ const app = express();
 // Corrected use of cors
 app.use(cors());
 app.use(express.json());
-
-
+app.use(cookieParser());
 //set this from your .env environment, yours may differ
-const connectionString = process.env.PORTDB2;
+const connectionString = process.env.PORTDB;
 //const port = process.env.port;
 const pool = new Pool({
-  connectionString
+  connectionString,
 });
 
 pool.connect((err) => {
@@ -36,7 +36,7 @@ pool.connect((err) => {
   }
 });
 
-//create tables 
+//create tables
 import createTables from "./tableCreation.js";
 createTables(pool);
 
@@ -62,7 +62,11 @@ app.use("/api/event", eventRoutes);
 app.use("/api/auth/all", async (req, res) => {
   try {
     const all = await pool.query("SELECT * from users");
-    console.log(await pool.query("SELECT table_schema, table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE'; "));
+    console.log(
+      await pool.query(
+        "SELECT table_schema, table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE'; "
+      )
+    );
     res.json(all.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -71,7 +75,6 @@ app.use("/api/auth/all", async (req, res) => {
 
 // ----------------------------------------------------
 
-
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
@@ -79,5 +82,3 @@ app.listen(PORT, () => {
 });
 
 export default pool;
-
-

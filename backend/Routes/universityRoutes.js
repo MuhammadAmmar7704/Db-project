@@ -1,15 +1,40 @@
 import express from "express";
-import { addUniversity, deleteUniversity, updateUniversity, getAllUniversity } from "../Controllers/universityController.js";
+import {
+  addUniversity,
+  deleteUniversity,
+  updateUniversity,
+  getAllUniversity,
+} from "../Controllers/universityController.js";
+import protectRoute from "../Middleware/authMiddleware.js";
+import checkRole from "../Middleware/rolesMiddleware.js";
 
 const router = express.Router();
 
-router.post('/adduniversity', addUniversity);
+router.post(
+  "/adduniversity",
+  protectRoute,
+  checkRole("Super_Admin"),
+  addUniversity
+);
 
-router.post('/deleteuniversity', deleteUniversity);
+router.post(
+  "/deleteuniversity",
+  protectRoute,
+  checkRole("Super_Admin"),
+  deleteUniversity
+);
+router.post(
+  "/updateuniversity",
+  protectRoute,
+  checkRole("Super_Admin"),
+  updateUniversity
+);
 
-router.post('/updateuniversity', updateUniversity);
-
-router.get('/getalluniversity', getAllUniversity);
-
+router.get(
+  "/getalluniversity",
+  protectRoute,
+  checkRole("Super_Admin"),
+  getAllUniversity
+);
 
 export default router;
