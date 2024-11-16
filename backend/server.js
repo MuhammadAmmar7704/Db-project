@@ -2,13 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import pkg from "pg";
-//import universityRoutes from "./Routes/universityRoutes.js";
-//import societyRoutes from "./Routes/societyRoutes.js";
-//import eventRoutes from "./Routes/eventRoutes.js";
 import authRoutes from "./Routes/authRoutes.js";
 import cookieParser from "cookie-parser";
-//import requestRoutes from "./Routes/requestRoutes.js"; // this logic is removed for the moment
-//import { password } from "pg/lib/defaults.js";
 import universityRoutes from "./Routes/universityRoutes.js";
 import societyRoutes from "./Routes/societyRoutes.js";
 import eventRoutes from "./Routes/eventRoutes.js";
@@ -23,6 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 //set this from your .env environment, yours may differ
+// const connectionString = process.env.PORTDB;
 const connectionString = process.env.PORTDB;
 
 

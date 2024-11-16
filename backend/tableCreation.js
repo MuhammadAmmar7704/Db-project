@@ -30,6 +30,7 @@ const createSocietyTable = async () => {
           name VARCHAR(100) UNIQUE NOT NULL,
           university_id INTEGER NOT NULL,
           admin_id INTEGER UNIQUE,
+          image_url VARCHAR(100),
           FOREIGN KEY(university_id) REFERENCES university(university_id) ON DELETE CASCADE,
           FOREIGN KEY(admin_id) REFERENCES users(user_id)
           );
@@ -61,11 +62,41 @@ const createEventTable = async () => {
           Event_id SERIAL PRIMARY KEY,
           event_name varchar(50) Unique NOT NULL,
           society_id INTEGER NOT NULL,
+          image_url VARCHAR(100),
           FOREIGN KEY(society_id) REFERENCES society(society_id) ON DELETE CASCADE
           );
       `;
   return createTableQuery;
 };
+
+const createContestTable = async () => {
+  //contests
+  const createTableQuery = `
+          CREATE TABLE IF NOT EXISTS contest   (
+          Contest_id SERIAL PRIMARY KEY,
+          Event_id INTEGER NOT NULL,
+          contest_name varchar(50) NOT NULL,
+          participants INTEGER NOT NULL,
+          description VARCHAR(100),
+          FOREIGN KEY(Event_id) REFERENCES event(Event_id) ON DELETE CASCADE
+          );
+      `;
+  return createTableQuery;
+};
+
+const createRegistrationTable = async () => {
+  
+  const createTableQuery = `
+          CREATE TABLE IF NOT EXISTS registration   (
+          Contest_id INTEGER NOT NULL,
+          user_id INTEGER NOT NULL,
+          FOREIGN KEY(Contest_id) REFERENCES Contest(Contest_id) ON DELETE CASCADE,
+          FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
+          );
+      `;
+  return createTableQuery;
+};
+
 const createRolesTable = async () => {
   const createTableQuery = `
     CREATE TABLE IF NOT EXISTS roles (
@@ -195,6 +226,8 @@ const createTables = async (p) => {
     const societyTableQuery = await createSocietyTable();
     const eventTableQuery = await createEventTable();
     const studentTableQuery = await createStudentTable();
+    const RegistrationTableQuery = await createRegistrationTable();
+    const ContestTableQuery = await createContestTable();
     const alterUsersTableQuery = await alterUsersTable();
 
     await p.query(rolesTableQuery);
@@ -205,10 +238,14 @@ const createTables = async (p) => {
     await assignPermissionsToRoles(p);
     await p.query(userTableQuery);
     await p.query(universityTableQuery);
+    await p.query(studentTableQuery);
     await p.query(societyTableQuery);
     await p.query(eventTableQuery);
-    await p.query(studentTableQuery);
+    await p.query(ContestTableQuery);
+    await p.query(RegistrationTableQuery);
 
+
+    console.log('tables created ');
     // only uncomment when students doesn't have role_id attribute
     // await p.query(alterUsersTableQuery);
   } catch (error) {
