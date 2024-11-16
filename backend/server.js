@@ -24,6 +24,8 @@ app.use(cookieParser());
 
 //set this from your .env environment, yours may differ
 const connectionString = process.env.PORTDB;
+
+
 //const port = process.env.port;
 const pool = new Pool({
   connectionString,
