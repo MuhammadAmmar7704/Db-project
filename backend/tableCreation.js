@@ -18,10 +18,19 @@ const createUniversityTable = async () => {
             phone VARCHAR(20) NOT NULL,
             address VARCHAR(100) NOT NULL,
             admin_id INTEGER UNIQUE,
-            FOREIGN KEY(admin_id) REFERENCES users(user_id)
+            FOREIGN KEY(admin_id) REFERENCES users(user_id) ON DELETE SET NULL
             );
         `;
   return createTableQuery;
+};
+
+const alterUniversityTable = () => {
+  const alterSocietyTableQuery = `
+  ALTER TABLE society 
+    ADD CONSTRAINT fk_university FOREIGN KEY (admin_id) REFERENCES users (user_id)
+    ON DELETE SET NULL;
+  `;
+  return alterSocietyTableQuery;
 };
 const createSocietyTable = async () => {
   const createTableQuery = `
@@ -32,12 +41,22 @@ const createSocietyTable = async () => {
           admin_id INTEGER UNIQUE,
           image_url VARCHAR(100),
           FOREIGN KEY(university_id) REFERENCES university(university_id) ON DELETE CASCADE,
-          FOREIGN KEY(admin_id) REFERENCES users(user_id)
+          FOREIGN KEY(admin_id) REFERENCES users(user_id) ON DELETE SET NULL
           );
       `;
 
   return createTableQuery;
 };
+
+const alterSocietyTable = () => {
+  const alterSocietyTableQuery = `
+  ALTER TABLE society 
+    ADD CONSTRAINT fk_society FOREIGN KEY (admin_id) REFERENCES users (user_id)
+    ON DELETE SET NULL;
+  `;
+  return alterSocietyTableQuery;
+};
+
 const createStudentTable = async () => {
   // there would be users who are not associated with university
   // separate table for students who are associated with any university
@@ -48,7 +67,7 @@ const createStudentTable = async () => {
           university_id INTEGER,
           FOREIGN KEY(university_id) REFERENCES university(university_id) ON DELETE CASCADE,
           FOREIGN KEY(student_id) REFERENCES users(user_id) ON DELETE CASCADE,
-          PRIMARY KEY(university_id, student_id)
+          PRIMARY KEY(university_id, student_id) 
           );
       `;
   return createTableQuery;
@@ -85,7 +104,6 @@ const createContestTable = async () => {
 };
 
 const createRegistrationTable = async () => {
-  
   const createTableQuery = `
           CREATE TABLE IF NOT EXISTS registration   (
           Contest_id INTEGER NOT NULL,
@@ -115,15 +133,26 @@ const createPermissionsTable = async () => {
   `;
   return createPermissionsQuery;
 };
-const alterUsersTable = async () => {
+const alterUsersTable = () => {
   const alterUsersTableQuery = `
     ALTER TABLE users 
-    ADD COLUMN IF NOT EXISTS role_id INTEGER NOT NULL DEFAULT 1,
-    ADD CONSTRAINT IF NOT EXISTS fk_role FOREIGN KEY(role_id) REFERENCES roles(role_id)
+    ADD COLUMN IF NOT EXISTS role_id INTEGER NOT NULL DEFAULT 1;
+    
+    ALTER TABLE users 
+    ADD CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES roles (role_id)
     ON DELETE CASCADE;
   `;
   return alterUsersTableQuery;
 };
+
+const alterEventTable = () => {
+  const alterEventsTableQuery = `
+    ALTER table event
+    ADD COLUMN if not exists event_date DATE NOT NULL Default CURRENT_DATE;
+  `;
+  return alterEventsTableQuery;
+};
+
 const insertDefaultRoles = async (p) => {
   const roles = [
     "Users",
@@ -164,6 +193,7 @@ const insertDefaultPermissions = async (p) => {
     "remove_university",
     "assign_university_head",
     "super_admin_privileges",
+    "remove_user",
   ];
   for (const permission of permissions) {
     const query =
@@ -196,6 +226,7 @@ const assignPermissionsToRoles = async (p) => {
       "create_university",
       "update_university",
       "remove_university",
+      "remove_user",
     ],
   };
 
@@ -229,6 +260,9 @@ const createTables = async (p) => {
     const RegistrationTableQuery = await createRegistrationTable();
     const ContestTableQuery = await createContestTable();
     const alterUsersTableQuery = await alterUsersTable();
+    const alterEventsTableQuery = await alterEventTable();
+    const alterSocietyTableQuery = await alterSocietyTable();
+    const alterUniversityTableQuery = await alterUniversityTable();
 
     await p.query(rolesTableQuery);
     await insertDefaultRoles(p);
@@ -243,11 +277,19 @@ const createTables = async (p) => {
     await p.query(eventTableQuery);
     await p.query(ContestTableQuery);
     await p.query(RegistrationTableQuery);
+    await p.query(alterEventsTableQuery);
 
-
-    console.log('tables created ');
+    console.log("tables created ");
+    
     // only uncomment when students doesn't have role_id attribute
     // await p.query(alterUsersTableQuery);
+    
+
+    /* initially, there was no fk_society and fk_university constraint, if you are creating tables from scratch, then comment below two queries
+    if constraint already added, i-e already executed the lines below, then comment them, as they'll throw an error */
+
+    // await p.query(alterUniversityTableQuery);
+    // await p.query(alterSocietyTableQuery);
   } catch (error) {
     console.error("Error creating tables:", error);
   }
