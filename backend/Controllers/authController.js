@@ -1,7 +1,7 @@
 import pool from "../server.js";
 import bcrypt from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/generateToken.js";
-
+import createUsersTable from "../tableCreation.js";
 
 export const signup = async (req, res) => {
   try {
@@ -66,13 +66,14 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role_id } = req.body;
     console.log({ email, password });
     if (!email || !password) {
       return res.status(400).json({ error: "Please fill all the fields" });
     }
 
-    const query = "SELECT * FROM users WHERE email = $1";
+    const query =
+      "SELECT * FROM users u join roles r on u.role_id = r.role_id WHERE email = $1";
     const data = [email];
 
     const confirm = await pool.query(query, data);
@@ -88,6 +89,7 @@ export const login = async (req, res) => {
       email: user_email,
       password: user_password,
       username: user_username,
+      role_name: role_name,
     } = user;
 
     // Check if the provided password matches the stored hashed password
@@ -99,8 +101,12 @@ export const login = async (req, res) => {
 
     // If the password is correct, generate token and set cookie
     generateTokenAndSetCookie(id, res);
+    // const newquery = "select r.role_name from roles r join users u on u.role_id = r.role_id where u.user_id = $1"
+    // const newdata =[id];
 
-    return res.status(201).json({ id, user_username, user_email });
+    // const newConfirm = await pool.query(newquery, newdata);
+
+    return res.status(201).json({ id, user_username, user_email, role_name });
   } catch (error) {
     console.error(error); // Log the error for debugging
     return res.status(500).json({ error: "Internal Server Error" });
@@ -127,12 +133,27 @@ export const deleteUser = async (req, res) => {
       return res.status(400).json({ error: "Please fill all the fields" });
     }
 
+    const getDataquery = "SELECT FROM users WHERE username = $1";
     const query = "DELETE FROM users WHERE username = $1;";
     const data = [username];
+    const getData = await pool.query(getDataquery, data);
+
+    const { rows } = getData;
+
+    if (rows.length === 0) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    const [user] = rows;
+    const {
+      user_id: id,
+      email: user_email,
+      password: user_password,
+      username: user_username,
+    } = user;
 
     const confirm = await pool.query(query, data);
-
-    res.status(200).json(confirm.rows);
+    res.status(201).json({ message: `${username} has been removed` });
   } catch (error) {
     res.send(error);
   }
