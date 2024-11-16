@@ -2,26 +2,6 @@ import pool from "../server.js";
 import bcrypt from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/generateToken.js";
 
-//miscellaneous functions ___________
-const createUsersTable = async () => {
-  const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS users (
-        user_id SERIAL PRIMARY KEY,
-        username VARCHAR(100) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        email VARCHAR(100) UNIQUE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `;
-  return createTableQuery;
-};
-
-// ammar = {
-//   name: "ibrahim",
-//   passowrd: "123",
-// }
-// new_name = ammar.name;
-// {name} = ammar;
 
 export const signup = async (req, res) => {
   try {
