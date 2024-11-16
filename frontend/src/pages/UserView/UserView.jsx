@@ -6,6 +6,7 @@ import AboutUs from './AboutUs'
 import SideMenu from './SideMenu'
 import SocietyPage from './SocietyPage'
 import ViewAllEvents from './ViewAllEvents'
+import EventPage from './EventPage'
 
 const UserView = () => {
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
@@ -17,6 +18,8 @@ const UserView = () => {
             <Route path="/" element={<Home />} />
             <Route path="/societypage" element={<SocietyPage />} />
             <Route path="/viewallevents" element={<ViewAllEvents />} />
+            <Route path="/viewevent/:id" element={<EventPage />} />
+            <Route path="/viewsociety/:id" element={<SocietyPage />} />
         </Routes>
         <AboutUs/>
     

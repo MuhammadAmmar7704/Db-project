@@ -4,6 +4,7 @@ import EventContext from "./createContext.js"; // Import the context from create
 
 export const EventProvider = ({ children }) => {
     const [events, setEvents] = useState([]);
+    const [societies, setSocieties] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -26,8 +27,53 @@ export const EventProvider = ({ children }) => {
       }
     };
 
+    const fetchAllSocieties = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        console.log('Fetching Societies...');
+        const response = await axios.get("/api/society/getallsociety", {
+            withCredentials: true, 
+        });
+        console.log(response.data.Society)
+        setSocieties(response.data.Society);
+      } catch (err) {
+        console.error("Error fetching Societies:", err);
+        setError(err.message || "Failed to fetch Societies");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchEvent = async (id) => {
+      try {
+        const response = await axios.get(`/api/event/getevent/${id}`, {
+          withCredentials: true,
+        });
+        
+        return response.data.event;
+      } catch (err) {
+        setError(err.message || "Failed to fetch the event");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    useEffect(() => {
+      fetchAllEvents();
+      fetchAllSocieties();
+    }, []);
+
     return (
-      <EventContext.Provider value={{ events, fetchAllEvents, loading, error }}>
+      <EventContext.Provider 
+      value={{ 
+        events,
+        societies,
+        fetchAllEvents, 
+        loading, 
+        error, 
+        fetchEvent }}>
         {children}
       </EventContext.Provider>
     );

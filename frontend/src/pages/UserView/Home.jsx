@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Carousel from './Carousal';
 import CardContainer from './CardContainer';
+import EventContext from '../../Context/eventContext/createContext';
 
 const Home = () => {
+  const { events, societies } = useContext(EventContext);
+
+
   return (
     <div className="px-6 py-8">
       {/* Main Title */}
@@ -19,13 +23,13 @@ const Home = () => {
       {/* Recent Events Section */}
       <div className="w-full mb-12">
         <h2 className="text-4xl font-semibold text-center text-green-600 mb-6">Recent Events</h2>
-        <div className="w-full"><CardContainer/></div>
+        <div className="w-full"><CardContainer events={events}/></div>
       </div>
 
       {/* Societies Section */}
       <div className="w-full mb-12">
         <h2 className="text-4xl font-semibold text-center text-blue-600 mb-6">Societies</h2>
-        <div className="w-full"><CardContainer/></div>
+        <div className="w-full"><CardContainer societies={societies}/></div>
       </div>
     </div>
   );

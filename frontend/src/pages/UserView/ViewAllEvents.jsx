@@ -5,9 +5,7 @@ import EventContext from '../../Context/eventContext/createContext.js';
 const ViewAllEvents = () => {
   const { events, fetchAllEvents, loading, error } = useContext(EventContext);
 
-  useEffect(() => {
-    fetchAllEvents();
-  }, []);
+  
 
   const today = new Date();
   const upcomingEvents = events.filter(event => new Date(event.event_date) >= today);
