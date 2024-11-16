@@ -4,6 +4,7 @@ import {
   deleteEvent,
   getAllEvent,
   updateEvent,
+  getEventbyId
 } from "../Controllers/eventController.js";
 import roleMiddleware from "../Middleware/roleMiddleware.js";
 import protectRoute from "../Middleware/authMiddleware.js";
@@ -32,5 +33,8 @@ router.post(
 );
 
 router.get("/getallevent", protectRoute, getAllEvent);
+
+
+router.get("/getevent/:id", protectRoute, getEventbyId);
 
 export default router;

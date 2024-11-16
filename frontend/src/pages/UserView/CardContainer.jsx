@@ -10,52 +10,44 @@ const getRandomColor = () => {
   return colors[randomIndex];
 };
 
-const CardContainer = () => {
-  const events = [
-    {
-      id: 1,
-      title: "PROCOM 2024",
-      date: "21-12-2024",
-    },
-    {
-      id: 2,
-      title: "PROCOM 2024",
-      date: "21-12-2024",
-    },
-    {
-      id: 3,
-      title: "PROCOM 2024",
-      date: "21-12-2024",
-    },
-    {
-      id: 4,
-      title: "PROCOM 2024",
-      date: "21-12-2024",
-    },
-  ];
+const CardContainer = (props) => {
+  const { events, societies } = props;
 
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {events.map((event) => {
+        {events && events.map((event) => {
           const randomColor = getRandomColor(); // Get a random color for each card
 
           return (
             <div
-              key={event.id}
-              className={`group relative border p-4 rounded-lg h-80 flex flex-col justify-center items-center ${randomColor} text-white overflow-hidden transition-all duration-300`}
+              key={event.event_id}
+              className={`group relative border p-4 rounded-lg h-80 flex flex-col justify-center items-center text-white overflow-hidden transition-all duration-300 ${randomColor}`}
             >
-              {/* Title */}
-              <h3 className="card-title text-black text-3xl font-bold group-hover:text-4xl transition-all duration-300">
-                {event.title}
-              </h3>
-              {/* Date */}
-              <p className="card-title text-black text-xl group-hover:text-2xl transition-all duration-300">
-                {event.date}
-              </p>
+              {/* Background Image */}
+              <div
+                className="absolute inset-0 bg-cover bg-center filter blur-lg group-hover:blur-none transition-all duration-300"
+                style={{ backgroundImage: `url(${event.image_url})` }}
+              ></div>
 
-              {/* Background opacity change */}
-              <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-all duration-300"></div>
+              {/* Content */}
+              <div className="relative z-10 text-center">
+                {/* Title */}
+                <h3 className="card-title text-black text-3xl font-bold group-hover:text-4xl transition-all duration-300">
+                  {event.event_name}
+                </h3>
+                {/* Date */}
+                <p className="card-title text-black text-xl group-hover:text-2xl transition-all duration-300">
+                  {new Date(event.event_date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+              </div>
+
+              {/* Background Overlay */}
+              <div className="absolute inset-0 bg-black opacity-40 group-hover:opacity-20 transition-all duration-300"></div>
             </div>
           );
         })}

@@ -1,27 +1,20 @@
-import Home from "./pages/UserView/Home.jsx";
-import Login from "./pages/Login/Login.jsx";
-import Signup from "./pages/Signup/Signup.jsx";
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import './App.css'
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import UserView from "./pages/UserView/UserView.jsx";
+import "./App.css";
+import {EventProvider} from "./Context/eventContext/eventContext.jsx"
+import axios from "axios";
 
 function App() {
-
-
+  axios.defaults.baseURL = 'http://localhost:5000';
 
   return (
-    <>
-    <Router>
-      <Routes>
-      <Route path="/userview/*" element={<UserView/>}/>
-      {/* <Route path="/login" element={<Login />} /> */}
-      {/* <Signup /> */}
-      </Routes>
-    </Router>
-      
-
-
-    </>
+    <EventProvider>
+      <Router>
+        <Routes>
+          <Route path="/userview/*" element={<UserView />} />
+        </Routes>
+      </Router>
+    </EventProvider>
   );
 }
 

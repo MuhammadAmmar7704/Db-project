@@ -1,7 +1,7 @@
 import React from 'react';
 import CardContainer from './CardContainer';
 
-const SocietyPage = () => {
+const eventPage = () => {
   // Example data
   const societyData = {
     society_id: 1,
@@ -62,4 +62,4 @@ const SocietyPage = () => {
   );
 };
 
-export default SocietyPage;
+export default eventPage;

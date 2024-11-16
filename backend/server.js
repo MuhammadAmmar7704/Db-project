@@ -12,8 +12,13 @@ dotenv.config();
 const { Pool } = pkg;
 const app = express();
 
+
 // Corrected use of cors
-app.use(cors());
+//app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // Frontend URL
+    credentials: true, // Allow cookies to be sent
+}));
 app.use(express.json());
 app.use(cookieParser());
 

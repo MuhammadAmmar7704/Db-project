@@ -68,9 +68,21 @@ export const getAllEvent = async (req, res) => {
     
     try {
         const result = await pool.query(query);
-        res.status(200).json({ message: "got all event successfully", Society: result.rows });
+        res.status(200).json({ message: "got all event successfully", events: result.rows });
     } catch (error) {
         
         res.status(500).json({ message: "Failed to get all event", error });
     }
+};
+
+export const getEventbyId = async (req, res) => {
+  try {
+      const id = req.params.id;
+      const query = "Select * FROM Event where event_id = $1";
+      const result = await pool.query(query, [id]);
+      res.status(200).json({ message: "got event successfully", event: result.rows });
+  } catch (error) {
+      
+      res.status(500).json({ message: "Failed to get event", error });
+  }
 };
