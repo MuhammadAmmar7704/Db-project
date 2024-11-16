@@ -8,6 +8,7 @@ export const addUniversity = async (req, res) => {
         req.body.admin_id // This id should be a user, should be authenticated
     ];
 
+    console.log(data);
     const query = "INSERT INTO university (name, phone, address, admin_id) VALUES ($1, $2, $3, $4)";
 
     try {

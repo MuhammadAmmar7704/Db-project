@@ -62,6 +62,7 @@ const createEventTable = async () => {
           Event_id SERIAL PRIMARY KEY,
           event_name varchar(50) Unique NOT NULL,
           society_id INTEGER NOT NULL,
+          date DATE NOT NULL,
           image_url VARCHAR(100),
           FOREIGN KEY(society_id) REFERENCES society(society_id) ON DELETE CASCADE
           );

@@ -5,8 +5,6 @@ import generateTokenAndSetCookie from "../utils/generateToken.js";
 
 export const signup = async (req, res) => {
   try {
-    const createTableQuery = await createUsersTable();
-    const result = await pool.query(createTableQuery);
 
     const { username, password, email } = req.body;
 
