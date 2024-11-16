@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const Navbar = () => {
-  const universities = ["University A", "University B", "University C", "University D"];
-  const dropdownHeight = universities.length * 40 + "px"; // Dynamic height calculation
+const Navbar = (props) => {
 
-  const [isOpen, setIsOpen] = useState(false);
+  const {setIsSideMenuOpen, isSideMenuOpen} = props;
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  const toggleSideMenu = () => {
+    setIsSideMenuOpen(!isSideMenuOpen);
   };
 
   return (
@@ -33,9 +31,6 @@ const Navbar = () => {
             <li>
               <a href="#">SignUp</a>
             </li>
-            <li>
-              <a href="#">ABOUT US</a>
-            </li>
           </ul>
         </div>
       </div>
@@ -46,50 +41,25 @@ const Navbar = () => {
           </li>
 
           {/* Browse Societies */}
-          <li className="w-72">
-          <div className="relative inline-block text-left">
-      <button
-        className="btn btn-primary"
-        onClick={toggleDropdown}
-        aria-expanded={isOpen}
-      >
-        Dropdown Menu
-      </button>
-
-      {isOpen && (
-        <div
-          className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-10"
-        >
-          <a
-            href="#"
-            className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
-          >
-            Action
-          </a>
-          <a
-            href="#"
-            className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
-          >
-            Another Action
-          </a>
-          <a
-            href="#"
-            className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
-          >
-            Something Else
-          </a>
-        </div>
-      )}
-    </div>
-
+          <li >
+          <div >
+            <button
+              className="btn btn-primary"
+              onClick={toggleSideMenu}
+            >
+              Browse Societies
+            </button>
+          </div>
+          </li>
 
     {/* {browse societies end} */}
+          
+          
+          <li>
+            <a href="#">Events</a>
           </li>
           <li>
-            <a href="#">Map</a>
-          </li>
-          <li>
-            <a href="#">Articles</a>
+            <a href="#">Contact Us</a>
           </li>
         </ul>
       </div>
