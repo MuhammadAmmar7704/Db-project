@@ -4,6 +4,8 @@ import pool from "../server.js";
 const protectRoute = async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
+    // console.log('hre', token)
+
     if (!token) {
       return res
         .status(401)

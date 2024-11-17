@@ -28,57 +28,108 @@ export const UCRProvider = ({ children }) => {
     }
   };
 
-  // Fetch all contests
-  const fetchAllContests = async () => {
-    setLoading(true);
-    setError(null);
+  // Fetch contests by event ID
+const fetchContestsByEventId = async (eventId) => {
+  setLoading(true);
+  setError(null);
 
-    try {
-      //console.log('Fetching Contests...');
-      const response = await axios.get("/api/contest/getallcontests", {
+  try {
+    console.log('fetching bro');
+    const response = await axios.get(`/api/contest/getcontestofevent/${eventId}`, {
+      withCredentials: true,
+    });
+    
+    console.log('after contest = ', response.data.contests);
+    setContests(response.data.contests);
+  } catch (err) {
+    console.error("Error fetching contests:", err);
+    setError(err.message || "Failed to fetch contests");
+  } finally {
+    setLoading(false);
+  }
+};
+
+// Register for a contest
+const registerForContest = async (contestId, userId) => {
+  setLoading(true);
+  setError(null);
+
+  try {
+
+    
+    
+    console.log(`Registering user ${userId} for contest ${contestId}...`);
+
+
+
+    const response = await axios.post(
+      "/api/contest/register",
+      {
+        contest_id: contestId,
+        user_id: userId,
+      },
+      {
         withCredentials: true,
-      });
-      setContests(response.data.contests); // Adjust key as per API response
-    } catch (err) {
-      console.error("Error fetching contests:", err);
-      setError(err.message || "Failed to fetch contests");
-    } finally {
-      setLoading(false);
-    }
-  };
+      }
+    );
 
-  // Add registration
-  const registerForEvent = async (eventId, userId, registrationDetails) => {
-    setLoading(true);
-    setError(null);
+    console.log("Registration successful:", response.data);
+    return response.data; 
+  } catch (err) {
+    console.error("Error during registration:", err);
+    setError(err.message || "Failed to register for the contest");
+    throw err; 
+  } finally {
+    setLoading(false);
+  }
+};
 
-    try {
-      console.log("Registering for event...");
-      const response = await axios.post(
-        "/api/registration/register",
-        {
-          eventId,
-          userId,
-          ...registrationDetails,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      console.log("Registration successful:", response.data);
-      return response.data;
-    } catch (err) {
-      console.error("Error during registration:", err);
-      setError(err.message || "Failed to register for the event");
-    } finally {
-      setLoading(false);
-    }
-  };
+
+//count register
+const countRegistration = async (contestId) => {
+  try {
+    const response = await axios.post(
+      "/api/contest/countregistration",
+      {
+        contest_id: contestId,
+      },
+      {
+        withCredentials: true,
+      },
+      
+    );
+
+    // console.log("successful:", response.data);
+    return response.data; 
+  } catch (err) {
+    console.error("Error:", err);
+    setError(err.message || "Failed to count registerations for the contest");
+    throw err; 
+  }
+};
+
+
+//get contest
+const getContestParticipants = async (contestId) => {
+  try {
+    const response = await axios.get(
+      `/api/contest/${contestId}`,
+      {
+        withCredentials: true,
+      },
+    );
+
+    return response.data.contest.participants; 
+  } catch (err) {
+    console.error("Error d:", err);
+    setError(err.message || "Failed to get contest");
+    throw err; 
+  }
+};
 
   // Initial data fetching
   useEffect(() => {
     fetchAllUniversities();
-    // fetchAllContests();
   }, []);
 
   return (
@@ -86,9 +137,12 @@ export const UCRProvider = ({ children }) => {
       value={{
         universities,
         contests,
+        setContests,
         fetchAllUniversities,
-        fetchAllContests,
-        registerForEvent,
+        fetchContestsByEventId,
+        registerForContest,
+        getContestParticipants,
+        countRegistration,
         loading,
         error,
         

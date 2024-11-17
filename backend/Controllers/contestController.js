@@ -85,3 +85,45 @@ export const register = async (req, res) => {
     }
   };
   
+
+  export const countRegistration = async (req, res) => {
+    const countRegistrationQuery =
+      "SELECT COUNT(*) AS total FROM registration WHERE contest_id = $1";
+      try {
+        const { contest_id } = req.body;
+      
+      // Validate input
+      if (!contest_id) {
+        return res.status(400).json({ message: "Contest ID is required." });
+      }
+  
+      const result = await pool.query(countRegistrationQuery, [contest_id]);
+  
+      // Extract the count from the query result
+      const totalRegistrations = result.rows[0]?.total || 0;
+  
+      res.status(200).json({ message: "Count fetched successfully", count: totalRegistrations });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to count registrations", error: error.message });
+    }
+  };
+  
+
+  export const getContest = async (req, res) => {
+    const query = "SELECT * FROM contest WHERE contest_id = $1";
+  
+    try {
+      const { id } = req.params; // Get contest_id from route parameters
+      // Fetch contest by contest_id
+      const result = await pool.query(query, [id]);
+  
+      if (result.rows.length === 0) {
+        return res.status(404).json({ message: "Contest not found" });
+      }
+  
+      res.status(200).json({ message: "Got contest", contest: result.rows[0] });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get contest", error: error.message });
+    }
+  };
+  
