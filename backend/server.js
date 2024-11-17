@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import universityRoutes from "./Routes/universityRoutes.js";
 import societyRoutes from "./Routes/societyRoutes.js";
 import eventRoutes from "./Routes/eventRoutes.js";
+import contestRoutes from "./Routes/contestRoutes.js";
 
 dotenv.config();
 const { Pool } = pkg;
@@ -48,7 +49,7 @@ app.get("/", (req, res) => {
   res.send("Hello world from the backend");
 });
 
-//underdevelopment
+//done
 app.use("/api/auth", authRoutes);
 
 //one thing needed in updation, deletion, : need to add authentication
@@ -57,27 +58,13 @@ app.use("/api/university", universityRoutes);
 //done : may add authentication for who is accessing
 app.use("/api/society", societyRoutes);
 
-//underdevelopment
+//done : may add authentication for who is accessing
 app.use("/api/event", eventRoutes);
 
-// ----------------------------------------------------
+//underdevelopment
+app.use("/api/contest", contestRoutes);
 
-// get all users (for testing purpose)
-app.use("/api/auth/all", async (req, res) => {
-  try {
-    const all = await pool.query("SELECT * from users");
-    console.log(
-      await pool.query(
-        "SELECT table_schema, table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE'; "
-      )
-    );
-    res.json(all.rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
-// ----------------------------------------------------
 
 const PORT = process.env.PORT || 5000;
 

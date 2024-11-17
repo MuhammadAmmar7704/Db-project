@@ -106,12 +106,13 @@ const createContestTable = async () => {
 
 const createRegistrationTable = async () => {
   const createTableQuery = `
-          CREATE TABLE IF NOT EXISTS registration   (
+          CREATE TABLE IF NOT EXISTS registration (
           Contest_id INTEGER NOT NULL,
           user_id INTEGER NOT NULL,
-          FOREIGN KEY(Contest_id) REFERENCES Contest(Contest_id) ON DELETE CASCADE,
-          FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
-          );
+          PRIMARY KEY (Contest_id, user_id),
+          FOREIGN KEY (Contest_id) REFERENCES Contest(Contest_id) ON DELETE CASCADE,
+          FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+      );
       `;
   return createTableQuery;
 };
