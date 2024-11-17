@@ -4,13 +4,14 @@ import CardContainer from './CardContainer';
 import EventContext from '../../Context/eventContext/createContext';
 
 const SocietyPage = () => {
-  const { societies } = useContext(EventContext); // Access societies from context
-  const { id } = useParams(); // Get society ID from the URL params
+  const { societies } = useContext(EventContext);
+  const { id } = useParams(); 
   const [society, setSociety] = useState(null);
 
   useEffect(() => {
+    
     if (societies) {
-      // Find the society with the matching ID
+      
       const foundSociety = societies.find(
         (society) => society.society_id === parseInt(id) // Ensure `id` is a number
       );

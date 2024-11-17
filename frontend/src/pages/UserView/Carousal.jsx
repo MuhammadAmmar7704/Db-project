@@ -1,12 +1,25 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import EventContext from "../../Context/eventContext/createContext.js";
 
 const Carousel = () => {
-  const slides = [
-    "https://i.imgur.com/CzXTtJV.jpg",
-    "https://i.imgur.com/OB0y6MR.jpg",
-    "https://farm4.staticflickr.com/3075/3168662394_7d7103de7d_z_d.jpg",
-    "https://farm9.staticflickr.com/8505/8441256181_4e98d8bff5_z_d.jpg",
-  ];
+
+  const {events} = useContext(EventContext);
+
+  const [slides, setSlides] = useState([]);
+  useEffect(() => {
+    const sortedEvents = [...events].sort((a, b) => {
+      const dateA = new Date(a.event_date);
+      const dateB = new Date(b.event_date);
+      return dateA - dateB; // Ascending order
+    });
+  
+    const filteredEvents = sortedEvents.slice(0, 4);
+  
+    const slideImages = filteredEvents.map(event => event.image_url);
+  
+    setSlides(slideImages);
+  }, [events]);
+  
 
   const [currentIndex, setCurrentIndex] = useState(0);
 

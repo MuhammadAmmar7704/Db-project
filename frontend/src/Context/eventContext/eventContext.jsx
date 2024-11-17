@@ -13,7 +13,7 @@ export const EventProvider = ({ children }) => {
       setError(null);
       
       try {
-        console.log('Fetching events...');
+        // console.log('Fetching events...');
         const response = await axios.get("/api/event/getallevent", {
             withCredentials: true, 
         });
@@ -32,7 +32,7 @@ export const EventProvider = ({ children }) => {
       setError(null);
       
       try {
-        console.log('Fetching Societies...');
+        // console.log('Fetching Societies...');
         const response = await axios.get("/api/society/getallsociety", {
             withCredentials: true, 
         });

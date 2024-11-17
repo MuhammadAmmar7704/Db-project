@@ -25,9 +25,9 @@ const CardContainer = (props) => {
           const randomColor = getRandomColor(); // Get a random color for each card
 
           return (
-            <Link to={`/userview/viewevent/${event.event_id}`}>
+            <Link key={event.event_id} to={`/userview/viewevent/${event.event_id}`}>
             <div
-              key={event.event_id}
+              
               className={`group relative border p-4 rounded-lg h-80 flex flex-col justify-center items-center text-white overflow-hidden transition-all duration-300 ${randomColor}`}
               >
               {/* Background Image */}
@@ -66,9 +66,9 @@ const CardContainer = (props) => {
           const randomColor = getRandomColor(); // Get a random color for each card
 
           return (
-            <Link to={`/userview/viewsociety/${society.society_id}`}>
+            <Link key={society.society_id} to={`/userview/viewsociety/${society.society_id}`}>
             <div
-              key={society.society_id}
+              
               className={`group relative border p-4 rounded-lg h-80 flex flex-col justify-center items-center text-white overflow-hidden transition-all duration-300 ${randomColor}`}
               >
               {/* Background Image */}

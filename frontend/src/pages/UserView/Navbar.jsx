@@ -37,7 +37,7 @@ const Navbar = (props) => {
       <div className="bottom_nav">
         <ul className="flex space-x-6">
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/userview">Home</Link>
           </li>
 
           {/* Browse Societies */}
@@ -56,10 +56,10 @@ const Navbar = (props) => {
           
           
           <li>
-            <a href="#">Events</a>
+            <Link to="viewallevents">Events</Link>
           </li>
           <li>
-            <a href="#">Contact Us</a>
+            <Link to="contactus">Contact Us</Link>
           </li>
         </ul>
       </div>
