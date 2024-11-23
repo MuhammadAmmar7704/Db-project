@@ -58,7 +58,7 @@ const registerForContest = async (contestId, userId) => {
 
     
     
-    console.log(`Registering user ${userId} for contest ${contestId}...`);
+    //console.log(`Registering user ${userId} for contest ${contestId}...`);
 
 
 
@@ -127,10 +127,6 @@ const getContestParticipants = async (contestId) => {
   }
 };
 
-  // Initial data fetching
-  useEffect(() => {
-    fetchAllUniversities();
-  }, []);
 
   return (
     <UCRContext.Provider

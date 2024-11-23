@@ -2,13 +2,20 @@ import React, { useContext, useEffect, useState } from 'react';
 import Carousel from './Carousal';
 import CardContainer from './CardContainer';
 import EventContext from '../../Context/eventContext/createContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Home = (props) => {
   const { events, societies } = useContext(EventContext);
   const [firstThreeEvents, setFirstThreeEvents] = useState([]);
   const [firstThreeSocieties, setFirstThreeSocieties] = useState([]);
   const {setIsSideMenuOpen} = props;
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    if(!localStorage.getItem('user_id')){
+      navigate('/login');
+    }
+  }, [])
 
   useEffect(() => {
     let temp = [];

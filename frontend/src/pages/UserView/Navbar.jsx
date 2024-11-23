@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import UserContext from '../../Context/userContext/createContext.js';
 
 const Navbar = (props) => {
 
   const {setIsSideMenuOpen, isSideMenuOpen} = props;
-
+  const {logOut} = useContext(UserContext);
+  const navigate = useNavigate();
   const toggleSideMenu = () => {
     setIsSideMenuOpen(!isSideMenuOpen);
   };
+
+  const logOuttheUser = () => {
+    logOut();
+    localStorage.removeItem('user_id');
+    navigate('/login');
+  }
+  
 
   return (
     <div className="wrapper">
@@ -26,10 +35,7 @@ const Navbar = (props) => {
         <div className="right">
           <ul>
             <li>
-              <a href="#">LogIn</a>
-            </li>
-            <li>
-              <a href="#">SignUp</a>
+              <button className='btn btn-outline bg-indigo-700 text-white' onClick={logOuttheUser}>LogOut</button>
             </li>
           </ul>
         </div>

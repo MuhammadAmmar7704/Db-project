@@ -19,9 +19,11 @@ export const EventProvider = ({ children }) => {
         });
         
         setEvents(response.data.events);
+        return response.status;
       } catch (err) {
-        console.error("Error fetching events:", err);
+        //console.error("Error fetching events:", err);
         setError(err.message || "Failed to fetch events");
+        return err;
       } finally {
         setLoading(false);
       }
@@ -36,11 +38,12 @@ export const EventProvider = ({ children }) => {
         const response = await axios.get("/api/society/getallsociety", {
             withCredentials: true, 
         });
-        console.log(response.data.Society)
+        //console.log(response.data.Society)
         setSocieties(response.data.Society);
       } catch (err) {
-        console.error("Error fetching Societies:", err);
+        //console.error("Error fetching Societies:", err);
         setError(err.message || "Failed to fetch Societies");
+        return err
       } finally {
         setLoading(false);
       }
@@ -60,17 +63,15 @@ export const EventProvider = ({ children }) => {
       }
     }
 
-    useEffect(() => {
-      fetchAllEvents();
-      fetchAllSocieties();
-    }, []);
+    
 
     return (
       <EventContext.Provider 
       value={{ 
         events,
         societies,
-        fetchAllEvents, 
+        fetchAllEvents,
+        fetchAllSocieties,
         loading, 
         error, 
         fetchEvent }}>

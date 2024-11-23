@@ -1,7 +1,6 @@
 import pool from "../server.js";
 import bcrypt from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/generateToken.js";
-import createUsersTable from "../tableCreation.js";
 
 export const signup = async (req, res) => {
   try {
@@ -12,17 +11,19 @@ export const signup = async (req, res) => {
       return res.status(400).json({ error: "Please fill all the fields" });
     }
 
-    // will add later, to ensure no mistakes in adding password
-
-    // if (password !== confirmPassword) {
-    //   return res.status(400).json({ error: "Passwords do not match" });
-    // }
-
-    const user_exists = "SELECT * FROM users where username=$1";
-    const exists_query = await pool.query(user_exists, [username]);
+    let user_exists = "SELECT * FROM users where username=$1 ";
+    let exists_query = await pool.query(user_exists, [username]);
 
     if (exists_query.rows.length > 0) {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(409).json({ error: "Username already exists" });
+    }
+
+
+    user_exists = "SELECT * FROM users where email=$1 ";
+    exists_query = await pool.query(user_exists, [email]);
+
+    if (exists_query.rows.length > 0) {
+      return res.status(409).json({ error: "email already exists" });
     }
 
     // hashing password, to make it secure
@@ -57,8 +58,6 @@ export const signup = async (req, res) => {
       });
     }
 
-    // comment this, if you uncomment authentication
-    // res.status(201).json({ id, user_username, user_email });
   } catch (error) {
     res.send(error);
   }
@@ -66,8 +65,8 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password, role_id } = req.body;
-    console.log({ email, password });
+    const { email, password } = req.body;
+    
     if (!email || !password) {
       return res.status(400).json({ error: "Please fill all the fields" });
     }
@@ -80,7 +79,7 @@ export const login = async (req, res) => {
     const { rows } = confirm;
 
     if (rows.length === 0) {
-      return res.status(400).json({ error: "Invalid credentials" });
+      return res.status(401).json({ error: "Invalid credentials" });
     }
 
     const [user] = rows;
@@ -92,35 +91,28 @@ export const login = async (req, res) => {
       role_name: role_name,
     } = user;
 
-    // Check if the provided password matches the stored hashed password
     const isPasswordCorrect = await bcrypt.compare(password, user_password);
 
     if (!isPasswordCorrect) {
-      return res.status(400).json({ error: "Invalid Password" });
+      return res.status(401).json({ error: "Invalid Password" });
     }
 
-    // If the password is correct, generate token and set cookie
     generateTokenAndSetCookie(id, res);
-    // const newquery = "select r.role_name from roles r join users u on u.role_id = r.role_id where u.user_id = $1"
-    // const newdata =[id];
-
-    // const newConfirm = await pool.query(newquery, newdata);
-
-    return res.status(201).json({ id, user_username, user_email, role_name });
+    return res.status(200).json({ id, user_username, user_email, role_name });
   } catch (error) {
-    console.error(error); // Log the error for debugging
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 export const logout = (req, res) => {
   try {
-    res.cookie("jwt", "", {
-      maxAge: 0,
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict", 
     });
     res.status(200).json({ success: true, message: "Logged out successfully" });
   } catch (error) {
-    console.log("Error in signup controller", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
