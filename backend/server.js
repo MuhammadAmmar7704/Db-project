@@ -8,6 +8,7 @@ import universityRoutes from "./Routes/universityRoutes.js";
 import societyRoutes from "./Routes/societyRoutes.js";
 import eventRoutes from "./Routes/eventRoutes.js";
 import contestRoutes from "./Routes/contestRoutes.js";
+import imageRoute from "./utils/uploadImage.js";
 
 dotenv.config();
 const { Pool } = pkg;
@@ -63,6 +64,9 @@ app.use("/api/event", eventRoutes);
 
 //underdevelopment
 app.use("/api/contest", contestRoutes);
+
+
+app.use("/image", imageRoute);
 
 
 

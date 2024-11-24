@@ -82,7 +82,7 @@ const createEventTable = async () => {
           event_name varchar(50) Unique NOT NULL,
           society_id INTEGER NOT NULL,
           date DATE NOT NULL,
-          image_url VARCHAR(100),
+          image_url VARCHAR(255),
           FOREIGN KEY(society_id) REFERENCES society(society_id) ON DELETE CASCADE
           );
       `;
@@ -281,6 +281,7 @@ const createTables = async (p) => {
     await p.query(RegistrationTableQuery);
     await p.query(alterEventsTableQuery);
 
+    //await p.query("ALTER TABLE event ALTER COLUMN image_url TYPE VARCHAR(255);");
     console.log("tables created ");
     
     // only uncomment when students doesn't have role_id attribute

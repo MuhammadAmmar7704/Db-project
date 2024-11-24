@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../../Context/userContext/createContext.js';
 
 const Navbar = (props) => {
 
   const {setIsSideMenuOpen, isSideMenuOpen} = props;
-  const {logOut} = useContext(UserContext);
+  const {logOut, isAuthenticated} = useContext(UserContext);
   const navigate = useNavigate();
   const toggleSideMenu = () => {
     setIsSideMenuOpen(!isSideMenuOpen);
@@ -14,9 +14,13 @@ const Navbar = (props) => {
   const logOuttheUser = () => {
     logOut();
     localStorage.removeItem('user_id');
-    navigate('/login');
+    //navigate('/login');
   }
   
+  useEffect(()=>{
+    if(!isAuthenticated)
+    navigate('/login');
+  }, [isAuthenticated])
 
   return (
     <div className="wrapper">

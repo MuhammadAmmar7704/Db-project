@@ -133,21 +133,13 @@ export const deleteUser = async (req, res) => {
     const { rows } = getData;
 
     if (rows.length === 0) {
-      return res.status(400).json({ error: "Invalid credentials" });
+      return res.status(400).json({ error: "Invalid username" });
     }
-
-    const [user] = rows;
-    const {
-      user_id: id,
-      email: user_email,
-      password: user_password,
-      username: user_username,
-    } = user;
 
     const confirm = await pool.query(query, data);
     res.status(201).json({ message: `${username} has been removed` });
   } catch (error) {
-    res.send(error);
+    res.status(500).json({message: 'user not deleted'});
   }
 };
 export const getCurrentUser = async (req, res) => {

@@ -53,15 +53,7 @@ const fetchContestsByEventId = async (eventId) => {
 const registerForContest = async (contestId, userId) => {
   setLoading(true);
   setError(null);
-
   try {
-
-    
-    
-    //console.log(`Registering user ${userId} for contest ${contestId}...`);
-
-
-
     const response = await axios.post(
       "/api/contest/register",
       {
@@ -73,10 +65,8 @@ const registerForContest = async (contestId, userId) => {
       }
     );
 
-    console.log("Registration successful:", response.data);
     return response.data; 
   } catch (err) {
-    console.error("Error during registration:", err);
     setError(err.message || "Failed to register for the contest");
     throw err; 
   } finally {
@@ -98,11 +88,8 @@ const countRegistration = async (contestId) => {
       },
       
     );
-
-    // console.log("successful:", response.data);
     return response.data; 
   } catch (err) {
-    console.error("Error:", err);
     setError(err.message || "Failed to count registerations for the contest");
     throw err; 
   }
@@ -121,7 +108,6 @@ const getContestParticipants = async (contestId) => {
 
     return response.data.contest.participants; 
   } catch (err) {
-    console.error("Error d:", err);
     setError(err.message || "Failed to get contest");
     throw err; 
   }

@@ -11,7 +11,7 @@ const Login = () => {
   });
   const [invalidEmail, SetInvalidEmail] = useState(false);
   const [message, SetMessage] = useState('');
-  const {login } = useContext(UserContext);
+  const {login, isAuthenticated } = useContext(UserContext);
   const {fetchAllEvents, fetchAllSocieties} = useContext(EventContext);
   const {fetchAllUniversities } = useContext(UCRContext);
   const navigate = useNavigate();
@@ -30,13 +30,13 @@ const Login = () => {
     }
     SetInvalidEmail(false);
     const status = await login(inputs);
-    if(status == 200){
+    if(isAuthenticated){
         fetchAllEvents();
         fetchAllSocieties();
         fetchAllUniversities();
         navigate('/userview');
     }
-    if(status == 401){
+    else if(status == 401){
       SetMessage('Incorrect Credentials')
     }else{
       SetMessage('internal server error');
@@ -46,18 +46,18 @@ const Login = () => {
   useEffect(()=>{
       const getdata = async () =>{
 
-        const response = await fetchAllEvents()
-        if(!(response.status == 401)){
+        if(isAuthenticated){
+          fetchAllEvents()
           fetchAllSocieties();
           fetchAllUniversities();
           navigate('/userview');
         }
-      } 
+      }
 
       getdata();
   
       SetMessage('');
-  },[])
+  },[isAuthenticated])
 
   return (
     <>

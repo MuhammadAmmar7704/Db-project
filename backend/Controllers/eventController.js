@@ -2,23 +2,21 @@ import pool from "../server.js";
 
 
 export const addEvent = async (req, res) => {
-    const getSocietyIdQuery = "SELECT society_id FROM society WHERE name = $1";
+    const getSocietyIdQuery = "SELECT society_id FROM society WHERE society_id = $1";
     const insertEventQuery =
       "INSERT INTO event (event_name, society_id, image_url, event_date) VALUES ($1, $2, $3, $4)";
-  
-    try {
-      const result = await pool.query(getSocietyIdQuery, [req.body.society_name]);
-  
-      if (!result.rows[0]) {
-        return res.status(400).json({ message: "Society does not exist. Enter a valid society" });
-      }
-  
-      const society_id = result.rows[0].society_id;
-      const { event_name, image_url, event_date } = req.body;
-      const data = [event_name, society_id, image_url, event_date];
-  
+      try {
+        const result = await pool.query(getSocietyIdQuery, [req.body.society_id]);
+        
+        if (!result.rows[0]) {
+          return res.status(400).json({ message: "Society does not exist. Enter a valid society" });
+        }
+        
+        const { event_name, image_url, event_date, society_id } = req.body;
+        const data = [event_name, society_id, image_url, event_date];
+        
       await pool.query(insertEventQuery, data);
-      res.status(201).json({ message: "Event added successfully", data });
+      res.status(200).json({ message: "Event added successfully", data });
     } catch (error) {
       res.status(500).json({ message: "Failed to add event", error: error.message });
     }
@@ -45,10 +43,10 @@ export const addEvent = async (req, res) => {
 
 export const deleteEvent = async (req, res) => {
     const data = [
-        req.body.event_name
+        req.body.event_id
     ];
 
-    const query = "DELETE FROM event WHERE event_name = $1";
+    const query = "DELETE FROM event WHERE event_id = $1";
 
     try {
         await pool.query(query, data);

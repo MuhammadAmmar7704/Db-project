@@ -13,7 +13,6 @@ export const EventProvider = ({ children }) => {
       setError(null);
       
       try {
-        // console.log('Fetching events...');
         const response = await axios.get("/api/event/getallevent", {
             withCredentials: true, 
         });
