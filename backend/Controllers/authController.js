@@ -119,25 +119,17 @@ export const logout = (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    const { username } = req.body;
-
-    if (!username) {
+    const {user_id } = req.body;
+    if (!user_id) {
       return res.status(400).json({ error: "Please fill all the fields" });
     }
-
-    const getDataquery = "SELECT FROM users WHERE username = $1";
-    const query = "DELETE FROM users WHERE username = $1;";
-    const data = [username];
-    const getData = await pool.query(getDataquery, data);
-
-    const { rows } = getData;
-
-    if (rows.length === 0) {
-      return res.status(400).json({ error: "Invalid username" });
-    }
-
+    
+    const query = "DELETE FROM users WHERE user_id = $1;";
+    const data = [user_id];
+    
+    
     const confirm = await pool.query(query, data);
-    res.status(201).json({ message: `${username} has been removed` });
+    res.status(200).json({ message: `${user_id} has been removed` });
   } catch (error) {
     res.status(500).json({message: 'user not deleted'});
   }
@@ -159,6 +151,27 @@ export const getCurrentUser = async (req, res) => {
     res.json(user);
   } catch (error) {
     console.error("Error in getCurrentUser:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+export const getAllUsers = async (req, res) => {
+  try {
+    const query = `
+      SELECT u.user_id, u.username, u.email, r.role_name 
+      FROM users u
+      JOIN roles r ON r.role_id = u.role_id
+      ORDER BY u.user_id ASC
+    `;
+
+    const result = await pool.query(query);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No users found" });
+    }
+
+    res.json({ users: result.rows });
+  } catch (error) {
+    console.error("Error in getAllUsers:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

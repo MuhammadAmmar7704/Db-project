@@ -13,21 +13,21 @@ const router = express.Router();
 router.post(
   "/addsociety",
   protectRoute,
-  roleMiddleware("create_society"),
+ // roleMiddleware("create_society"),
   addSociety
 );
 
 router.post(
   "/deletesociety",
   protectRoute,
-  roleMiddleware("remove_society"),
+ // roleMiddleware("remove_society"),
   deleteSociety
 );
 
 router.post(
   "/updatesociety",
   protectRoute,
-  roleMiddleware("update_society_society"),
+ // roleMiddleware("update_society_society"),
   updateSociety
 );
 

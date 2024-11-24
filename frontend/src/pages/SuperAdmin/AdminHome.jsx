@@ -25,28 +25,28 @@ const AdminHome = () => {
           </Link>
 
           {/* Remove User Button */}
-          <button
-            className="w-full py-3 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700 transition-all"
-            onClick={() => handleNavigation("/admin/remove-user")}
+          <Link
+            className="w-full py-3 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700 transition-all flex justify-center"
+            to='removeuser'
           >
             Remove User
-          </button>
+          </Link>
 
           {/* Universities Button */}
-          <button
-            className="w-full py-3 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition-all"
-            onClick={() => handleNavigation("/admin/universities")}
+          <Link
+            className="w-full py-3 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition-all flex justify-center"
+            to='universities'
           >
             Manage Universities
-          </button>
+          </Link>
 
           {/* Societies Button */}
-          <button
-            className="w-full py-3 bg-indigo-600 text-white rounded-md shadow-md hover:bg-indigo-700 transition-all"
-            onClick={() => handleNavigation("/admin/societies")}
+          <Link
+            className="w-full py-3 bg-indigo-600 text-white rounded-md shadow-md hover:bg-indigo-700 transition-all flex justify-center"
+            to='societies'
           >
             Manage Societies
-          </button>
+          </Link>
         </div>
       </div>
     </div>

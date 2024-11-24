@@ -5,15 +5,14 @@ export const addUniversity = async (req, res) => {
         req.body.name,
         req.body.phone,
         req.body.address,
-        req.body.admin_id // This id should be a user, should be authenticated
+        req.body.admin_id 
     ];
 
-    console.log(data);
     const query = "INSERT INTO university (name, phone, address, admin_id) VALUES ($1, $2, $3, $4)";
-
+    
     try {
         await pool.query(query, data);
-        res.status(201).json({ message: "University added successfully", university: data });
+        res.status(200).json({ message: "University added successfully", university: data });
     } catch (error) {
         
         res.status(500).json({ message: "Failed to add university", error });

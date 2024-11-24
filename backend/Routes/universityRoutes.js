@@ -13,21 +13,21 @@ const router = express.Router();
 router.post(
   "/adduniversity",
   protectRoute,
-  roleMiddleware("create_university"),
+  //roleMiddleware("create_university"),
   addUniversity
 );
 
 router.post(
   "/deleteuniversity",
   protectRoute,
-  roleMiddleware("remove_university"),
+  //roleMiddleware("remove_university"),
   deleteUniversity
 );
 
 router.post(
   "/updateuniversity",
   protectRoute,
-  roleMiddleware("update_university"),
+  //roleMiddleware("update_university"),
   updateUniversity
 );
 
