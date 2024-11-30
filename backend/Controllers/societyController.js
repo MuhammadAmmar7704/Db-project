@@ -11,20 +11,19 @@ export const addSociety = async (req, res) => {
     const query =
       "INSERT INTO society (name, university_id, admin_id, image_url) VALUES ($1, $2, $3, $4)";
   
-    // Query to check that society and admin should be in the same university
     const checkQuery =
       "SELECT university_id FROM users u JOIN student s ON u.user_id = s.student_id WHERE u.user_id = $1";
     try {
       const admin_uni_id = await pool.query(checkQuery, [req.body.admin_id]);
   
       if (!admin_uni_id.rows[0]) {
-        return res.status(400).json({ message: "Invalid admin ID" });
+        return res.status(400).json({ message: "User Does Not Exist or is not a Student. Kindly register Student first" });
       }
   
       if (req.body.university_id != admin_uni_id.rows[0].university_id) {
-        throw {
-          error: "Society Admin should be in the same university as society",
-        };
+        return res.status(400).json({
+          message: "Society Admin should be in the same university as society",
+        });
       }
   
       await pool.query(query, data);
@@ -42,14 +41,30 @@ export const addSociety = async (req, res) => {
       req.body.society_id,
       req.body.name,
       req.body.university_id,
-      req.body.admin_id, // This id should be a user, should be authenticated
+      req.body.admin_id, 
       req.body.image_url,
     ];
   
     const query =
       "UPDATE society SET name = $2, university_id = $3, admin_id = $4, image_url = $5 WHERE society_id = $1";
   
+    const checkQuery =
+      "SELECT university_id FROM users u JOIN student s ON u.user_id = s.student_id WHERE u.user_id = $1";
+    
     try {
+
+      const admin_uni_id = await pool.query(checkQuery, [req.body.admin_id]);
+  
+      if (!admin_uni_id.rows[0]) {
+        return res.status(400).json({ message: "User Does Not Exist or is not a Student. Kindly register Student first" });
+      }
+  
+      if (req.body.university_id != admin_uni_id.rows[0].university_id) {
+        return res.status(400).json({
+          message: "Society Admin should be in the same university as society",
+        });
+      }
+
       await pool.query(query, data);
       res
         .status(201)
@@ -90,4 +105,17 @@ export const getAllSociety = async (req, res) => {
         
         res.status(500).json({ message: "Failed to get all Society", error });
     }
+};
+
+export const getSocietybyId = async (req, res) => {
+  try {
+      const id = req.params.id;
+      const query = "SELECT S.*, A.username AS admin_name, U.name AS university_name, U.university_id \
+       FROM users A JOIN society S ON S.admin_id = A.user_id JOIN university U ON U.university_id = S.university_id WHERE society_id = $1;";
+      const result = await pool.query(query, [id]);
+      res.status(200).json({ message: "got society successfully", society: result.rows });
+  } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: "Failed to get society", error });
+  }
 };

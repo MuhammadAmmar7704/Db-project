@@ -53,7 +53,6 @@ export const EventProvider = ({ children }) => {
         const response = await axios.get(`/api/event/getevent/${id}`, {
           withCredentials: true,
         });
-        console.log(response.data.event[0].name)
         return response.data.event;
       } catch (err) {
         setError(err.message || "Failed to fetch the event");
@@ -62,6 +61,18 @@ export const EventProvider = ({ children }) => {
       }
     }
 
+    const fetchSociety = async (id) => {
+      try {
+        const response = await axios.get(`/api/society/getsociety/${id}`, {
+          withCredentials: true,
+        });
+        return response.data.society;
+      } catch (err) {
+        setError(err.message || "Failed to fetch the society");
+      } finally {
+        setLoading(false);
+      }
+    }
     
 
     return (
@@ -73,7 +84,9 @@ export const EventProvider = ({ children }) => {
         fetchAllSocieties,
         loading, 
         error, 
-        fetchEvent }}>
+        fetchEvent,
+        fetchSociety
+         }}>
         {children}
       </EventContext.Provider>
     );

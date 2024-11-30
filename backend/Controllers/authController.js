@@ -35,8 +35,10 @@ export const signup = async (req, res) => {
         RETURNING *`;
     const data = [req.body.username, hashedPassword, req.body.email];
 
+
     // adding in database
     const confirm = await pool.query(query, data);
+
 
     const { rows } = confirm;
     const [user] = rows;
@@ -47,11 +49,13 @@ export const signup = async (req, res) => {
       username: user_username,
     } = user;
 
-    // authentication (user token)
 
     if (confirm.rows.length > 0) {
       generateTokenAndSetCookie(id, res);
 
+      if(req.body.university_id){
+        pool.query("INSERT INTO student(student_id, university_id) VALUES ($1,$2)", [id,req.body.university_id])
+      }
       res.status(201).json({
         id: id,
         username: user_username,
@@ -72,7 +76,8 @@ export const login = async (req, res) => {
     }
 
     const query =
-      "SELECT * FROM users u join roles r on u.role_id = r.role_id WHERE email = $1";
+      "SELECT * FROM users u join roles r on u.role_id = r.role_id \
+      WHERE email = $1";
     const data = [email];
 
     const confirm = await pool.query(query, data);
@@ -98,6 +103,25 @@ export const login = async (req, res) => {
     }
 
     generateTokenAndSetCookie(id, res);
+    if(role_name === "University_Head"){
+
+      let uni_id = await pool.query("Select university_id from university Where \
+        admin_id = $1",[id]);
+
+      const university_id = uni_id.rows[0].university_id
+      return res.status(200).json({ id, user_username, user_email, role_name,university_id });
+
+    }
+    if(role_name === "Society_Head"){
+
+      let uni_id = await pool.query("Select society_id from society Where \
+        admin_id = $1",[id]);
+
+      const society_id = uni_id.rows[0].society_id
+      return res.status(200).json({ id, user_username, user_email, role_name,society_id });
+
+    }
+
     return res.status(200).json({ id, user_username, user_email, role_name });
   } catch (error) {
     return res.status(500).json({ error: "Internal Server Error" });

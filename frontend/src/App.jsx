@@ -35,7 +35,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/adminview/*" element={<AdminView />} />
           <Route path="/chooseview" element={<ChoicePage />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
         </Routes>
       </Router>
     </AdminProvider>

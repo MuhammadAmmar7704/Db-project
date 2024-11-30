@@ -31,6 +31,8 @@ router.post(
   updateUniversity
 );
 
-router.get("/getalluniversity", protectRoute, getAllUniversity);
+router.get("/getalluniversity", 
+  //protectRoute, 
+  getAllUniversity);
 
 export default router;

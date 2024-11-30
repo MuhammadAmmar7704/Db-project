@@ -8,13 +8,35 @@ export const addUniversity = async (req, res) => {
         req.body.admin_id 
     ];
 
+
+    
+    const checkStudentQuery = "SELECT * FROM student WHERE student_id = $1";
+
+    const checkAdminQuery = "SELECT * FROM university WHERE admin_id = $1";
+
     const query = "INSERT INTO university (name, phone, address, admin_id) VALUES ($1, $2, $3, $4)";
     
     try {
+        const studentResult = await pool.query(checkStudentQuery, [req.body.admin_id ]);
+        if (studentResult.rows.length > 0) {
+            return res
+            .status(400)
+            .json({ message: "Error: admin_id cannot belong to a student." });
+        }
+        
+        const adminResult = await pool.query(checkAdminQuery, [req.body.admin_id ]);
+        
+        if (adminResult.rows.length > 0) {
+        return res
+            .status(400)
+            .json({ message: "Error: This user is already an admin of another university." });
+        }
+
+
         await pool.query(query, data);
         res.status(200).json({ message: "University added successfully", university: data });
     } catch (error) {
-        
+        console.log(error)
         res.status(500).json({ message: "Failed to add university", error });
     }
 };
@@ -25,12 +47,35 @@ export const updateUniversity = async (req, res) => {
         req.body.name,
         req.body.phone,
         req.body.address,
-        req.body.admin_id // This id should be a user, should be authenticated
+        req.body.admin_id 
     ];
 
     const query = "UPDATE university SET name = ($2), phone = ($3), address = ($4), admin_id = ($5) WHERE university_id = ($1);";
 
+    const checkStudentQuery = "SELECT * FROM student WHERE student_id = $1";
+
+    const checkAdminQuery = "SELECT * FROM university WHERE admin_id = $1";
+
+    
     try {
+        if(req.body.admin_id ){
+
+            const studentResult = await pool.query(checkStudentQuery, [req.body.admin_id ]);
+            if (studentResult.rows.length > 0) {
+                return res
+                .status(400)
+                .json({ message: "Error: admin_id cannot belong to a student." });
+            }
+            
+            const adminResult = await pool.query(checkAdminQuery, [req.body.admin_id ]);
+            
+            if (adminResult.rows.length > 0) {
+                return res
+                .status(400)
+                .json({ message: "Error: This user is already an admin of another university." });
+            }
+        }
+        
         await pool.query(query, data);
         res.status(201).json({ message: "University updated successfully", university: data });
     } catch (error) {

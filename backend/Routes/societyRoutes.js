@@ -4,6 +4,7 @@ import {
   deleteSociety,
   updateSociety,
   getAllSociety,
+  getSocietybyId,
 } from "../Controllers/societyController.js";
 import protectRoute from "../Middleware/authMiddleware.js";
 import roleMiddleware from "../Middleware/roleMiddleware.js";
@@ -32,5 +33,7 @@ router.post(
 );
 
 router.get("/getallsociety", protectRoute, getAllSociety);
+
+router.get("/getsociety/:id", protectRoute, getSocietybyId);
 
 export default router;

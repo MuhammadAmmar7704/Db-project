@@ -7,7 +7,6 @@ const AdminUniPage = () => {
   const { universities, fetchAllUniversities} = useContext(UCRContext);
   const { removeUniversity } = useContext(AdminContext);
 
-  // Function to delete a university
   const deleteUniversity = async (id) => {
     await removeUniversity(id);
     fetchAllUniversities();
@@ -33,8 +32,8 @@ const AdminUniPage = () => {
             <p className="text-gray-800 mb-2">Address: {university.address}</p>
             <p className="text-gray-800">Admin ID: {university.admin_id}</p>
             <Link
-              to={`update/${university.university_id}`} // Dynamic route
-              state={university} // Pass university data as state
+              to={`update/${university.university_id}`} 
+              state={university}
               className="mt-2 bg-yellow-500 text-white px-4 py-2 rounded-md"
             >
               Update

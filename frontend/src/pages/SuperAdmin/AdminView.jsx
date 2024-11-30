@@ -11,7 +11,7 @@ import AdminSocietyPage from './AdminSocietyPage.jsx'
 
 const AdminView = () => {
   const {addEvent, updateEvent, addUniversity
-    , updateUniversity, addSociety, removeSociety,
+    , updateUniversity, addSociety,
     updateSociety
   } = useContext(AdminContext);
 

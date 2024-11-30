@@ -36,7 +36,7 @@ const Home = (props) => {
   }, [societies])
 
   return (
-    <Box className="px-6 py-8" Box sx={{
+    <Box className="px-6 py-8" sx={{
       background:'url(https://www.transparenttextures.com/patterns/wood-pattern.png)',
         minHeight: '100vh',
     }}>

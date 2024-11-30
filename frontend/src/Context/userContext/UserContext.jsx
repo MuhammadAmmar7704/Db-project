@@ -1,5 +1,5 @@
 import axios from "axios";
-import UserContext from "./createContext";
+import UserContext from "./createContext.js";
 import { useEffect, useState } from "react";
 
 export const UserProvider = ({ children }) => {
@@ -7,7 +7,7 @@ export const UserProvider = ({ children }) => {
     
     useEffect(() => {
         const userId = localStorage.getItem("user_id");
-        setIsAuthenticated(!!userId); // Set based on user_id presence
+        setIsAuthenticated(!!userId);
       }, []);
 
     const login =async (cred) => {
@@ -22,6 +22,12 @@ export const UserProvider = ({ children }) => {
             },)
             localStorage.setItem('user_id', response.data.id)
             localStorage.setItem('role_name', response.data.role_name)
+            if(response.data.university_id)
+                localStorage.setItem('university_id', response.data.university_id)
+
+            if(response.data.society_id)
+                localStorage.setItem('society_id', response.data.society_id)
+
             setIsAuthenticated(true);
             return response.status;
 
@@ -38,6 +44,7 @@ export const UserProvider = ({ children }) => {
                     email:cred.email,
                     password:cred.password,
                     username:cred.username,
+                    university_id:cred.university_id,
             },{
                 withCredentials: true,
             },)
@@ -61,6 +68,8 @@ export const UserProvider = ({ children }) => {
             setIsAuthenticated(false);
             localStorage.removeItem('role_name');
             localStorage.removeItem('user_id');
+            localStorage.removeItem('university_id');
+            
             
             return response.status;
 
