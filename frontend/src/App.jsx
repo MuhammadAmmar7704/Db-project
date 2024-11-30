@@ -11,12 +11,15 @@ import AdminView from "./pages/SuperAdmin/AdminView.jsx";
 import { AdminProvider } from "./Context/adminContext/AdminContext.jsx";
 import ChoicePage from "./pages/ChoicePage.jsx";
 import LoadingBar from 'react-top-loading-bar'
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { LoadingBarProvider } from "./Context/LoadingBarContext/LoadBarContext.jsx";
+import LoadingBarContext from "./Context/LoadingBarContext/CreateContext.js";
 
 function App() {
   axios.defaults.baseURL = 'http://localhost:5000';
   
-  const [progress, setProgress] = useState(50)
+  const {progress, setProgress} = useContext(LoadingBarContext);
+
   return (
     <>
     <LoadingBar
@@ -35,7 +38,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/adminview/*" element={<AdminView />} />
           <Route path="/chooseview" element={<ChoicePage />} />
-          {/* <Route path="*" element={<Navigate to="/login" replace />} /> */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
     </AdminProvider>

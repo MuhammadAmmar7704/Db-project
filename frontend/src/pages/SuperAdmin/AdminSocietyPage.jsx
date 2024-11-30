@@ -6,6 +6,7 @@ import EventContext from "../../Context/eventContext/createContext.js";
 const AdminSocietyPage = () => {
   const { societies, fetchAllSocieties } = useContext(EventContext);
   const  { removeSociety } = useContext(AdminContext);
+  const [currUniSocieties, setCurrUniSocieties] = useState([]);
 
   // Function to delete a society
   const deleteSociety = async (id) => {
@@ -14,7 +15,20 @@ const AdminSocietyPage = () => {
   };
 
   useEffect(() => {
-    fetchAllSocieties();
+    const setting =async () => {
+
+      
+      await fetchAllSocieties();
+      const id = localStorage.getItem('university_id');
+      if(id){
+        const temp = societies.filter(society => society.university_id == id);
+        setCurrUniSocieties(temp)
+      }else{
+        setCurrUniSocieties(societies)
+      }
+    }
+    setting();
+
   }, []);
 
   return (
@@ -22,7 +36,7 @@ const AdminSocietyPage = () => {
       <h1 className="text-2xl font-bold text-center mb-4">Admin Societies</h1>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 max-h-96 overflow-y-auto">
-        {societies.map((society) => (
+        {currUniSocieties.map((society) => (
           <div
             key={society.society_id}
             className="bg-white shadow-md rounded-md p-4"

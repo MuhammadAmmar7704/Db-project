@@ -85,3 +85,22 @@ export const getEventbyId = async (req, res) => {
       res.status(500).json({ message: "Failed to get event", error });
   }
 };
+
+export const getEventOfUni = async (req, res) => {
+  const { university_id } = req.params;
+
+  const query = `
+    SELECT e.*
+    FROM event e
+    INNER JOIN society s ON e.society_id = s.society_id
+    WHERE s.university_id = $1;
+  `;
+
+  try {
+    const result = await pool.query(query, [university_id]);
+    res.status(200).json({ events: result.rows });
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).json({ message: "Failed to fetch events", error });
+  }
+}

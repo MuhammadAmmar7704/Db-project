@@ -69,6 +69,7 @@ export const UserProvider = ({ children }) => {
             localStorage.removeItem('role_name');
             localStorage.removeItem('user_id');
             localStorage.removeItem('university_id');
+            localStorage.removeItem('society_id');
             
             
             return response.status;

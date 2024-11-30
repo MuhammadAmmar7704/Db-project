@@ -8,8 +8,9 @@ import AdminContext from "../../Context/adminContext/createContext.js";
 
 const AdminEventsPage = () => {
   
-  const {events, fetchAllEvents} = useContext(EventContext);
-  const {removeEvent, updateEvent} = useContext(AdminContext);
+  const {events, fetchAllEvents, fetchEventsByUniversityId} = useContext(EventContext);
+  const {removeEvent} = useContext(AdminContext);
+  const [currEvents, setCurrEvents] = useState([]);
 
   const  deleteEvent = async (id) => {
     await removeEvent(id);
@@ -19,7 +20,27 @@ const AdminEventsPage = () => {
   
 
   useEffect(() => {
-    fetchAllEvents();
+    const setting =async () => {
+
+      
+      await fetchAllEvents();
+      const id = localStorage.getItem('society_id');
+      const uni_id = localStorage.getItem('university_id');
+      if(id){
+        const temp = events.filter(event => event.society_id == id);
+        setCurrEvents(temp)
+      }else if(uni_id){
+        const res =await fetchEventsByUniversityId(uni_id);
+        // console.log('here', res);
+        setCurrEvents(res)
+      }else{
+        setCurrEvents(events)
+      }
+
+
+
+    }
+    setting();
   }, []);
 
   return (
@@ -27,7 +48,7 @@ const AdminEventsPage = () => {
       <h1 className="text-2xl font-bold text-center mb-4">Admin Events</h1>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 max-h-96 overflow-y-auto">
-        {events.map((event) => {
+        {currEvents.map((event) => {
             
             let date = new Date(event.event_date);
             

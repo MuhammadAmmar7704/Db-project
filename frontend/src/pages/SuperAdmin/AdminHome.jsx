@@ -24,12 +24,12 @@ const AdminHome = () => {
 
         <div className="grid grid-cols-1 gap-4">
           {/* Events Button */}
-          <Link
+          { <Link
             className="w-full py-3 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 transition-all flex justify-center"
             to='events'
           >
             Manage Events
-          </Link>
+          </Link>}
 
           {/* Remove User Button */}
           {role === 'Super_Admin' && <Link

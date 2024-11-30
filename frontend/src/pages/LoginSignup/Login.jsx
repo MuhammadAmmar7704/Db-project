@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../Context/userContext/createContext.js";
 import UCRContext from "../../Context/uniContestRegistrationContext/createContext.js";
 import EventContext from "../../Context/eventContext/createContext.js";
+import LoadingBarContext from "../../Context/LoadingBarContext/CreateContext.js";
 
 const Login = () => {
   const [inputs, setInputs] = useState({
@@ -15,6 +16,7 @@ const Login = () => {
   const {fetchAllEvents, fetchAllSocieties} = useContext(EventContext);
   const {fetchAllUniversities } = useContext(UCRContext);
   const navigate = useNavigate();
+  const {setProgress} = useContext(LoadingBarContext)
 
   const handleChange = (e) =>{
     
@@ -24,12 +26,18 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setProgress(10)
+    
     if (!inputs.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       SetInvalidEmail(true);
       return;
     }
+    setProgress(30) 
     SetInvalidEmail(false);
+
+    setProgress(50) 
     const status = await login(inputs);
+    setProgress(100) 
 
     if(status == 401){
       SetMessage('Incorrect Credentials')

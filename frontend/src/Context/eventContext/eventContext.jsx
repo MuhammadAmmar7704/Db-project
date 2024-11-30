@@ -73,6 +73,16 @@ export const EventProvider = ({ children }) => {
         setLoading(false);
       }
     }
+
+    const fetchEventsByUniversityId = async (university_id) => {
+      try {
+        const response = await axios.get(`/api/event/getuniversityevents/${university_id}`);
+        return response.data.events;
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        throw error;
+      }
+    };
     
 
     return (
@@ -85,7 +95,8 @@ export const EventProvider = ({ children }) => {
         loading, 
         error, 
         fetchEvent,
-        fetchSociety
+        fetchSociety,
+        fetchEventsByUniversityId
          }}>
         {children}
       </EventContext.Provider>

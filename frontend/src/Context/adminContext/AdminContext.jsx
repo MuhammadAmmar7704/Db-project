@@ -161,7 +161,16 @@ export const AdminProvider = ({children}) =>{
 
         } catch (error) {
             console.log(error);
-            alert(`university addition failed : ${error.response.data.message} ${error.response.data.error.detail}`);
+            let message ='university addition failed : '
+            if (error.response && error.response.data) {  
+                message += error.response.data.message;
+                if (error.response.data.error && error.response.data.error.detail) {  // Check for detailed error
+                  message += ` - ${error.response.data.error.detail}`;
+                }
+            } else {
+                message += ": Internal Server error";  
+            }
+              alert(message);
         }
     }
     //------------------------------------
@@ -203,7 +212,17 @@ export const AdminProvider = ({children}) =>{
             alert('society updated');
         } catch (error) {
             console.log(error);
-            alert(`Society addition failed : ${error.response.data.message} ${error.response.data.error.detail}`);
+            let message ='society updation failed : '
+            console.log(message)
+            if (error.response && error.response.data) {  
+                message += error.response.data.message;
+                if (error.response.data.error && error.response.data.error.detail) {  // Check for detailed error
+                  message += ` - ${error.response.data.error.detail}`;
+                }
+            } else {
+                message += ": Internal Server error";  
+            }
+              alert(message);
         }
     }
     const addSociety = async (data) => {
@@ -220,8 +239,16 @@ export const AdminProvider = ({children}) =>{
 
         } catch (error) {
             console.log(error);
-            alert('society addition failed');
-
+            let message ='society addition failed : '
+            if (error.response && error.response.data) {  
+                message += error.response.data.message;
+                if (error.response.data.error && error.response.data.error.detail) {  // Check for detailed error
+                  message += ` - ${error.response.data.error.detail}`;
+                }
+            } else {
+                message += ": Internal Server error";  
+            }
+              alert(message);
         }
     }
 
