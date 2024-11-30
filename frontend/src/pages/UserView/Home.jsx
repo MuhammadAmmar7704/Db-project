@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Carousel from './Carousal';
 import CardContainer from './CardContainer';
-import EventContext from '../../Context/eventContext/createContext';
+import EventContext from '../../Context/eventContext/createContext.js';
 import { Link, useNavigate } from 'react-router-dom';
+import {Box} from '@mui/material';
+
 
 const Home = (props) => {
   const { events, societies } = useContext(EventContext);
@@ -34,7 +36,10 @@ const Home = (props) => {
   }, [societies])
 
   return (
-    <div className="px-6 py-8">
+    <Box className="px-6 py-8" Box sx={{
+      background:'url(https://www.transparenttextures.com/patterns/wood-pattern.png)',
+        minHeight: '100vh',
+    }}>
       {/* Main Title */}
       <h1 className="text-5xl font-extrabold text-center text-gray-900 mb-8">
         Welcome to SocioVerse
@@ -71,7 +76,7 @@ const Home = (props) => {
           </h3>
        
       </div>
-    </div>
+    </Box>
   );
 };
 

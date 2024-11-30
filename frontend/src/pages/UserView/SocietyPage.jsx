@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import CardContainer from './CardContainer';
-import EventContext from '../../Context/eventContext/createContext';
+import {Box} from '@mui/material';
+import EventContext from '../../Context/eventContext/createContext.js';
 
 const SocietyPage = () => {
   const { societies } = useContext(EventContext);
@@ -13,11 +13,11 @@ const SocietyPage = () => {
     if (societies) {
       
       const foundSociety = societies.find(
-        (society) => society.society_id === parseInt(id) // Ensure `id` is a number
+        (society) => society.society_id === parseInt(id) 
       );
       setSociety(foundSociety);
     }
-  }, [societies, id]); // Re-run the effect if societies or id change
+  }, [societies, id]);
 
   if (!society) {
     return (
@@ -28,8 +28,15 @@ const SocietyPage = () => {
   }
 
   return (
-    <>
-      <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
+    <Box sx={{
+      background:'url(https://www.transparenttextures.com/patterns/wood-pattern.png)',
+        minHeight: '100vh',
+        
+        padding: 20,
+        
+    }}>
+
+      <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md"  >
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
           {society.name}
         </h1>
@@ -60,7 +67,7 @@ const SocietyPage = () => {
       </div>
 
       
-    </>
+    </Box>
   );
 };
 

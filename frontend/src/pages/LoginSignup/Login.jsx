@@ -30,13 +30,8 @@ const Login = () => {
     }
     SetInvalidEmail(false);
     const status = await login(inputs);
-    if(isAuthenticated){
-        fetchAllEvents();
-        fetchAllSocieties();
-        fetchAllUniversities();
-        navigate('/userview');
-    }
-    else if(status == 401){
+
+    if(status == 401){
       SetMessage('Incorrect Credentials')
     }else{
       SetMessage('internal server error');
@@ -50,7 +45,13 @@ const Login = () => {
           fetchAllEvents()
           fetchAllSocieties();
           fetchAllUniversities();
-          navigate('/userview');
+          const role = localStorage.getItem('role_name');
+          console.log('role = ',role);
+          if(role === 'Users' || role === 'Student')
+            navigate('/userview');
+          else
+            navigate('/chooseview');
+          //navigate('/userview');
         }
       }
 
@@ -61,7 +62,7 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center mx-auto  h-screen w-screen bg-slate-300" style={{border:'2px solid red'}}>
+      <div className="flex flex-col items-center justify-center mx-auto  h-screen w-screen bg-slate-300">
         <div className="max-w-md min-w-[20rem] p-6 rounded-3xl shadow-2xl bg-fuchsia-50 backdrop-filter backdrop-blur-lg">
           <h1 className="text-3xl font-semibold text-center text-gray-300">
             Login

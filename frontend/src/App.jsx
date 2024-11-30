@@ -9,14 +9,21 @@ import { UserProvider } from "./Context/userContext/UserContext.jsx";
 import Signup from "./pages/LoginSignup/Signup.jsx";
 import AdminView from "./pages/SuperAdmin/AdminView.jsx";
 import { AdminProvider } from "./Context/adminContext/AdminContext.jsx";
+import ChoicePage from "./pages/ChoicePage.jsx";
+import LoadingBar from 'react-top-loading-bar'
+import { useState } from "react";
 
 function App() {
   axios.defaults.baseURL = 'http://localhost:5000';
   
-  
-  console.log(document.cookie)
-
+  const [progress, setProgress] = useState(50)
   return (
+    <>
+    <LoadingBar
+        color='#4F7942'
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+    />
     <UCRProvider>
     <EventProvider>
     <UserProvider>
@@ -27,6 +34,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/adminview/*" element={<AdminView />} />
+          <Route path="/chooseview" element={<ChoicePage />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
@@ -34,6 +42,7 @@ function App() {
     </UserProvider>
     </EventProvider>
     </UCRProvider>
+    </>
   );
 }
 

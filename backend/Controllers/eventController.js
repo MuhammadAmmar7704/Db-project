@@ -76,7 +76,8 @@ export const getAllEvent = async (req, res) => {
 export const getEventbyId = async (req, res) => {
   try {
       const id = req.params.id;
-      const query = "Select * FROM Event where event_id = $1";
+      const query = "SELECT E.*, S.name AS society_name, U.name AS university_name, U.university_id \
+       FROM Event E JOIN society S ON S.society_id = E.society_id JOIN university U ON U.university_id = S.university_id WHERE event_id = $1;";
       const result = await pool.query(query, [id]);
       res.status(200).json({ message: "got event successfully", event: result.rows });
   } catch (error) {

@@ -1,25 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import EventContext from "../../Context/eventContext/createContext.js"; // Import the Event context
-import ContestContext from "../../Context/uniContestRegistrationContext/createContext.js"; // Import the Contest context
+import EventContext from "../../Context/eventContext/createContext.js"; 
+import ContestContext from "../../Context/uniContestRegistrationContext/createContext.js"; 
+import {Box} from '@mui/material';
+
 
 const EventPage = () => {
-  const { id } = useParams(); // Get the `id` from the URL
-  const { fetchEvent, loading: eventLoading, error: eventError } = useContext(EventContext); // Use context to fetch the event
-  const {contests, setContests,fetchContestsByEventId, registerForContest, loading: contestLoading, error: contestError,
+  const { id } = useParams(); 
+  const { fetchEvent, loading: eventLoading, error: eventError } = useContext(EventContext);
+  const {contests,fetchContestsByEventId, registerForContest, loading: contestLoading, error: contestError,
     countRegistration, getContestParticipants
-   } = useContext(ContestContext); // Use context to fetch and register contests
+   } = useContext(ContestContext); 
   const [event, setEvent] = useState(null);
   const [selectedContest, setSelectedContest] = useState(null);
   const [date, setDate] = useState(null);
 
   useEffect(() => {
     const loadEventData = async () => {
-      const eventData = await fetchEvent(id); // Fetch the event details
+      const eventData = await fetchEvent(id); 
       setEvent(eventData[0]);
       let d = new Date(eventData[0].event_date).toUTCString();
       setDate(d);
-      //console.log(eventData)
     };
 
     const loadContests = async () => {
@@ -58,17 +59,20 @@ const EventPage = () => {
   };
 
   return (
-    <>
+    <Box className="px-6 py-8" Box sx={{
+      background:'url(https://www.transparenttextures.com/patterns/wood-pattern.png)',
+        minHeight: '100vh',
+    }}>
     {(eventLoading || contestLoading) && <p>Loading...</p>}
     {(eventError) && <p>Error: {eventError}</p>}
     {(contestError ) && <p>Error: {contestError}</p>}
 
     {
     event && (
-      <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
+      <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md" >
         {/* Event Details */}
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
-          {event.name}
+          {event.event_name}
         </h1>
         <div className="flex flex-col items-center">
           <img
@@ -80,8 +84,8 @@ const EventPage = () => {
         </div>
         <div className="space-y-4">
           <div className="flex justify-between items-center border-b pb-2">
-            <span className="text-gray-600 font-semibold">Name:</span>
-            <span className="text-gray-800">{event.event_name}</span>
+            <span className="text-gray-600 font-semibold">From Society:</span>
+            <span className="text-gray-800">{event.society_name}</span>
           </div>
           <div className="flex justify-between items-center border-b pb-2">
             <span className="text-gray-600 font-semibold">Date of Event:</span>
@@ -91,7 +95,16 @@ const EventPage = () => {
             <span className="text-gray-600 font-semibold">Society ID:</span>
             <span className="text-gray-800">{event.society_id}</span>
           </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 font-semibold">university Name:</span>
+            <span className="text-gray-800">{event.university_name}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 font-semibold">university ID:</span>
+            <span className="text-gray-800">{event.university_id}</span>
+          </div>
         </div>
+          
 
         {/* Contests Section */}
         <div className="mt-8">
@@ -152,7 +165,7 @@ const EventPage = () => {
         </div>
       </div>
     )}
-      </>
+      </Box>
   );
 };
 

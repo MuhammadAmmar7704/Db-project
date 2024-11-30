@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Box, Typography, Container, Grid } from '@mui/material';
+import { TextField, Button, Box, Typography, Container } from '@mui/material';
 
-// Function to generate a random background pattern
 const getRandomPattern = () => {
   const patterns = [
     'linear-gradient(45deg, #f3ec78, #af4261)', // Gradient
@@ -17,13 +16,13 @@ const ContactUs = () => {
   const [backgroundPattern, setBackgroundPattern] = useState('');
 
   useEffect(() => {
-    setBackgroundPattern(getRandomPattern());
+    setBackgroundPattern('url(https://www.transparenttextures.com/patterns/wood-pattern.png)');
   }, []);
 
   return (
     <Box
       sx={{
-        background: backgroundPattern, // Apply random background pattern
+        background: backgroundPattern, 
         minHeight: '100vh',
         display: 'flex',
         justifyContent: 'center',

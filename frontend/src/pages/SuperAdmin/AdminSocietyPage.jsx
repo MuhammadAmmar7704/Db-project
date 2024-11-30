@@ -39,8 +39,8 @@ const AdminSocietyPage = () => {
               />
             )}
             <Link
-              to={`update/${society.society_id}`} // Dynamic route
-              state={society} // Pass society data as state
+              to={`update/${society.society_id}`} 
+              state={society} 
               className="mt-2 bg-yellow-500 text-white px-4 py-2 rounded-md"
             >
               Update

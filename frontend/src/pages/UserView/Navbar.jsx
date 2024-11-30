@@ -13,22 +13,20 @@ const Navbar = (props) => {
 
   const logOuttheUser = () => {
     logOut();
-    localStorage.removeItem('user_id');
     //navigate('/login');
   }
   
   useEffect(()=>{
     if(!isAuthenticated)
-    navigate('/login');
+      navigate('/login');
   }, [isAuthenticated])
 
   return (
-    <div className="wrapper">
-      <div className="multi_color_border"></div>
-      <div className="top_nav">
+    <div className="wrapper" >
+      <div className="top_nav" >
         <div className="left">
           <div className="logo">
-            <p>
+            <p style={{color:'#4F7942'}}>
               <span>Socio</span>Verse
             </p>
           </div>
@@ -39,12 +37,12 @@ const Navbar = (props) => {
         <div className="right">
           <ul>
             <li>
-              <button className='btn btn-outline bg-indigo-700 text-white' onClick={logOuttheUser}>LogOut</button>
+              <button className='btn btn-outline text-white bg-[#4F7942] hover:bg-slate-600 hover:text-[#4F7942]' onClick={logOuttheUser} >LogOut</button>
             </li>
           </ul>
         </div>
       </div>
-      <div className="bottom_nav">
+      <div className="bottom_nav" style={{background:'#4F7942'}}>
         <ul className="flex space-x-6">
           <li>
             <Link to="/userview">Home</Link>

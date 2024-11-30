@@ -59,6 +59,8 @@ export const UserProvider = ({ children }) => {
 
 
             setIsAuthenticated(false);
+            localStorage.removeItem('role_name');
+            localStorage.removeItem('user_id');
             
             return response.status;
 

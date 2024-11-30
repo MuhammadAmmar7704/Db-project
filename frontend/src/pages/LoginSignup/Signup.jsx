@@ -51,11 +51,11 @@ const Signup = () => {
     try {
       
       const status = await signup(inputs);
-      if(status == 200){
+      if(status == 201){
         setMessage('');
         navigate('/login');
       }
-      //console.log(status.response.data.error);
+      console.log('here', status);
       setMessage(status.response.data.error);
     } catch (error) {
       console.error("Error:", error);
@@ -158,6 +158,23 @@ const Signup = () => {
                 <p className="text-red-600 font-bold">
                   {errors.confirmpassword}
                 </p>
+              )}
+            </div>
+
+            <div>
+              <label className="label p-2">
+                <span className="text-base label-text font-semibold">Are you Student</span>
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter Email"
+                value={inputs.email}
+                onChange={handleChange}
+                className="w-full input h-10 input-bordered"
+              />
+              {errors.email && (
+                <p className="text-red-600 font-bold">{errors.email}</p>
               )}
             </div>
 

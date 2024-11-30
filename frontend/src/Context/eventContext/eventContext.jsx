@@ -53,7 +53,7 @@ export const EventProvider = ({ children }) => {
         const response = await axios.get(`/api/event/getevent/${id}`, {
           withCredentials: true,
         });
-        
+        console.log(response.data.event[0].name)
         return response.data.event;
       } catch (err) {
         setError(err.message || "Failed to fetch the event");

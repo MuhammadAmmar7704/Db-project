@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import UserContext from "../../Context/userContext/createContext";
 
 const AdminHome = () => {
+  const [role, setRole] = useState("");
+  const {logOut,isAuthenticated} = useContext(UserContext);
   const navigate = useNavigate();
+  useEffect(()=>{
+    if(!isAuthenticated)
+      navigate('/login');
+  }, [isAuthenticated])
 
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
+  useEffect(()=>{
+    setRole(localStorage.getItem('role_name'));
+  }, [])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -25,28 +32,36 @@ const AdminHome = () => {
           </Link>
 
           {/* Remove User Button */}
-          <Link
+          {role === 'Super_Admin' && <Link
             className="w-full py-3 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700 transition-all flex justify-center"
             to='removeuser'
           >
             Remove User
-          </Link>
+          </Link>}
 
           {/* Universities Button */}
-          <Link
+          {role === 'Super_Admin' && <Link
             className="w-full py-3 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition-all flex justify-center"
             to='universities'
           >
             Manage Universities
-          </Link>
+          </Link>}
 
           {/* Societies Button */}
-          <Link
+          {(role === 'Super_Admin' || role === 'University_Head') && <Link
             className="w-full py-3 bg-indigo-600 text-white rounded-md shadow-md hover:bg-indigo-700 transition-all flex justify-center"
             to='societies'
           >
             Manage Societies
-          </Link>
+          </Link>}
+
+          {/* LOG OUT */}
+          <button
+            className="w-full py-3 bg-indigo-600 text-white rounded-md shadow-md hover:bg-indigo-700 transition-all flex justify-center"
+            onClick={logOut}
+          >
+            log out
+          </button>
         </div>
       </div>
     </div>

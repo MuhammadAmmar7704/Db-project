@@ -1,9 +1,11 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import CardContainer from './CardContainer';
 import EventContext from '../../Context/eventContext/createContext.js'; 
+import {Box} from '@mui/material';
+
 
 const ViewAllEvents = () => {
-  const { events, fetchAllEvents, loading, error } = useContext(EventContext);
+  const { events, loading, error } = useContext(EventContext);
 
   
 
@@ -13,6 +15,10 @@ const ViewAllEvents = () => {
 
   
   return (
+    <Box className="px-6 py-8" Box sx={{
+      background:'url(https://www.transparenttextures.com/patterns/wood-pattern.png)',
+        minHeight: '100vh',
+    }}>
     <div className="py-10">
       {loading && <p>Loading events...</p>}
       {error && <p>Error: {error}</p>}
@@ -33,6 +39,7 @@ const ViewAllEvents = () => {
         </div>
       </div>
     </div>
+    </Box>
   );
 };
 

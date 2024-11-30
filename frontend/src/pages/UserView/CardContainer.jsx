@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// Function to generate a random color
 const getRandomColor = () => {
   const colors = [
     "bg-blue-400", "bg-red-400", "bg-green-400", "bg-yellow-400", 
@@ -14,9 +13,8 @@ const getRandomColor = () => {
 const CardContainer = (props) => {
   const { events, societies } = props;
 
-  //console.log(societies);
-
   return (
+    
     <div>
       <div >
         {/* events */}
