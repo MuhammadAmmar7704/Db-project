@@ -62,8 +62,8 @@ const AdminEventsPage = () => {
             <p className="text-gray-600 mb-2">{date.toUTCString()}</p>
             <p className="text-gray-800">{event.description}</p>
             <Link
-            to={`update/${event.event_id}`} // Dynamic route
-            state={event} // Pass event data as state
+            to={`update/${event.event_id}`} 
+            state={event} 
             className="mt-2 bg-yellow-500 text-white px-4 py-2 rounded-md"
             >
                 Update
@@ -74,6 +74,13 @@ const AdminEventsPage = () => {
             >
               Delete
             </button>
+            <Link
+            to={`contests/${event.event_id}`} 
+            state={event} 
+            className="mt-2 bg-yellow-500 text-white px-4 py-2 rounded-md"
+            >
+                View Contests
+            </Link>
           </div>
         )})}
       </div>

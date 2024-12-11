@@ -33,7 +33,7 @@ export const deleteContest = async (req, res) => {
 
     // Delete contest by contest_id
     await pool.query(query, [contest_id]);
-    res.status(200).json({ message: "Contest deleted successfully", contest_id });
+    res.status(201).json({ message: "Contest deleted successfully", contest_id });
   } catch (error) {
     res.status(500).json({ message: "Failed to delete contest", error: error.message });
   }

@@ -108,7 +108,11 @@ export const login = async (req, res) => {
       let uni_id = await pool.query("Select university_id from university Where \
         admin_id = $1",[id]);
 
-      const university_id = uni_id.rows[0].university_id
+      const university_id = uni_id.rows[0].university_id;
+      await pool.query(`UPDATE global_variables SET variable_value = ${id} WHERE variable_name = 'current_user_id'`);
+      console.log('success', r)
+      
+
       return res.status(200).json({ id, user_username, user_email, role_name,university_id });
 
     }
@@ -118,12 +122,22 @@ export const login = async (req, res) => {
         admin_id = $1",[id]);
 
       const society_id = uni_id.rows[0].society_id
+      await pool.query(`UPDATE global_variables SET variable_value = ${id} WHERE variable_name = 'current_user_id'`);
+      
+      console.log('success')
+
       return res.status(200).json({ id, user_username, user_email, role_name,society_id });
 
+    }
+    if(role_name === "Super_Admin"){
+      await pool.query(`UPDATE global_variables SET variable_value = ${id} WHERE variable_name = 'current_user_id'`);
+      
+      console.log('success')
     }
 
     return res.status(200).json({ id, user_username, user_email, role_name });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };

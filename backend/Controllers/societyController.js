@@ -37,6 +37,7 @@ export const addSociety = async (req, res) => {
   
 
   export const updateSociety = async (req, res) => {
+    
     const data = [
       req.body.society_id,
       req.body.name,
@@ -70,6 +71,7 @@ export const addSociety = async (req, res) => {
         .status(201)
         .json({ message: "Society updated successfully", Society: data });
     } catch (error) {
+      console.log(error);
       res.status(500).json({ message: "Failed to update Society", error });
     }
   };

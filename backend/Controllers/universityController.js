@@ -68,8 +68,8 @@ export const updateUniversity = async (req, res) => {
             }
             
             const adminResult = await pool.query(checkAdminQuery, [req.body.admin_id ]);
-            
-            if (adminResult.rows.length > 0) {
+            console.log(adminResult.rows);
+            if (adminResult.rows.length > 0 && adminResult.rows[0].university_id != req.body.university_id) {
                 return res
                 .status(400)
                 .json({ message: "Error: This user is already an admin of another university." });

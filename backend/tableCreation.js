@@ -135,25 +135,6 @@ const createPermissionsTable = async () => {
   `;
   return createPermissionsQuery;
 };
-const alterUsersTable = () => {
-  const alterUsersTableQuery = `
-    ALTER TABLE users 
-    ADD COLUMN IF NOT EXISTS role_id INTEGER NOT NULL DEFAULT 1;
-    
-    ALTER TABLE users 
-    ADD CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES roles (role_id)
-    ON DELETE CASCADE;
-  `;
-  return alterUsersTableQuery;
-};
-
-const alterEventTable = () => {
-  const alterEventsTableQuery = `
-    ALTER table event
-    ADD COLUMN if not exists event_date DATE NOT NULL Default CURRENT_DATE;
-  `;
-  return alterEventsTableQuery;
-};
 
 const insertDefaultRoles = async (p) => {
   const roles = [
@@ -249,6 +230,158 @@ const assignPermissionsToRoles = async (p) => {
     }
   }
 };
+
+const createUserLogTable = async () => {
+  const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS logs (
+        log_id SERIAL PRIMARY KEY,
+        action VARCHAR(50) NOT NULL, -- e.g., 'INSERT', 'UPDATE', 'DELETE'
+        table_name VARCHAR(50) NOT NULL, -- e.g., 'users', 'university'
+        changed_by INTEGER NOT NULL, -- ID of the user performing the action
+        change_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        details JSONB -- Optional: Additional details about the change
+    );
+  `;
+  return createTableQuery;
+};
+
+const createLogTriggers = async (p) => {
+
+  //user Trigger
+  const userTrigger = `
+      CREATE OR REPLACE FUNCTION log_user_changes()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            
+            DECLARE
+                current_user_id INTEGER;
+            BEGIN
+                SELECT variable_value INTO current_user_id 
+                FROM global_variables 
+                WHERE variable_name = 'current_user_id';
+            
+                INSERT INTO logs (action, table_name, changed_by, details)
+                VALUES (
+                    TG_OP, 
+                    TG_TABLE_NAME, 
+                    current_user_id, 
+                    row_to_json(OLD) 
+                );
+                RETURN NEW; 
+            END;
+        END;
+        $$ LANGUAGE plpgsql;
+
+  `
+
+  const userTrigger2 = `
+  CREATE or REPLACE TRIGGER trigger_log_users
+    AFTER INSERT OR UPDATE OR DELETE ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION log_user_changes();
+  `
+
+  //University Trigger
+
+  const UniTrigger = `
+  CREATE OR REPLACE FUNCTION log_university_changes()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        DECLARE
+            current_user_id INTEGER;
+        BEGIN
+            SELECT variable_value INTO current_user_id 
+            FROM global_variables 
+            WHERE variable_name = 'current_user_id';
+
+            -- For INSERT operation, use only university_id
+            IF (TG_OP = 'INSERT') THEN
+                INSERT INTO logs (action, table_name, changed_by, details)
+                VALUES (
+                    TG_OP, 
+                    'university', 
+                    current_user_id, 
+                    (NEW.university_id::TEXT)::JSON -- Ensures only university_id is included
+                );
+            ELSE
+                -- For UPDATE and DELETE operations, include row_to_json(OLD) for details
+                INSERT INTO logs (action, table_name, changed_by, details)
+                VALUES (
+                    TG_OP, 
+                    'university', 
+                    current_user_id, 
+                    row_to_json(OLD) 
+                );
+            END IF;
+
+            RETURN NEW; 
+        END;
+    END;
+    $$ LANGUAGE plpgsql;
+
+
+  `
+  const UniTrigger2 = `
+    CREATE OR REPLACE TRIGGER trigger_log_university
+    AFTER INSERT OR UPDATE OR DELETE ON university
+    FOR EACH ROW
+    EXECUTE FUNCTION log_university_changes();
+  `
+
+  const SocTrigger = `
+  CREATE OR REPLACE FUNCTION log_society_changes()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        DECLARE
+            current_user_id INTEGER;
+        BEGIN
+            SELECT variable_value INTO current_user_id 
+            FROM global_variables 
+            WHERE variable_name = 'current_user_id';
+
+            -- For INSERT operation, use only university_id
+            IF (TG_OP = 'INSERT') THEN
+                INSERT INTO logs (action, table_name, changed_by, details)
+                VALUES (
+                    TG_OP, 
+                    'society', 
+                    current_user_id, 
+                    (NEW.society_id::TEXT)::JSON -- Ensures only university_id is included
+                );
+            ELSE
+                -- For UPDATE and DELETE operations, include row_to_json(OLD) for details
+                INSERT INTO logs (action, table_name, changed_by, details)
+                VALUES (
+                    TG_OP, 
+                    'society', 
+                    current_user_id, 
+                    row_to_json(OLD) 
+                );
+            END IF;
+
+            RETURN NEW; 
+        END;
+    END;
+    $$ LANGUAGE plpgsql;
+
+
+  `
+  const SocTrigger2 = `
+    CREATE OR REPLACE TRIGGER trigger_log_society
+    AFTER INSERT OR UPDATE OR DELETE ON society
+    FOR EACH ROW
+    EXECUTE FUNCTION log_society_changes();
+  `
+
+
+  p.query(userTrigger)
+  p.query(userTrigger2)
+  p.query(UniTrigger)
+  p.query(UniTrigger2)
+  p.query(SocTrigger)
+  p.query(SocTrigger2)
+}
+
 const createTables = async (p) => {
   try {
     const rolesTableQuery = await createRolesTable();
@@ -261,10 +394,11 @@ const createTables = async (p) => {
     const studentTableQuery = await createStudentTable();
     const RegistrationTableQuery = await createRegistrationTable();
     const ContestTableQuery = await createContestTable();
-    const alterUsersTableQuery = await alterUsersTable();
-    const alterEventsTableQuery = await alterEventTable();
-    const alterSocietyTableQuery = await alterSocietyTable();
-    const alterUniversityTableQuery = await alterUniversityTable();
+    const UserLogTable = await createUserLogTable();
+    // const alterUsersTableQuery = await alterUsersTable();
+    // const alterEventsTableQuery = await alterEventTable();
+    // const alterSocietyTableQuery = await alterSocietyTable();
+    // const alterUniversityTableQuery = await alterUniversityTable();
 
     await p.query(rolesTableQuery);
     await insertDefaultRoles(p);
@@ -279,14 +413,17 @@ const createTables = async (p) => {
     await p.query(eventTableQuery);
     await p.query(ContestTableQuery);
     await p.query(RegistrationTableQuery);
-    await p.query(alterEventsTableQuery);
+    await p.query(UserLogTable);
+    
 
+    //await p.query(alterEventsTableQuery);
     //await p.query("ALTER TABLE society ALTER COLUMN image_url TYPE VARCHAR(255);");
     console.log("tables created ");
     
     // only uncomment when students doesn't have role_id attribute
     // await p.query(alterUsersTableQuery);
-    
+    createLogTriggers(p);
+    console.log("triggers created ");
 
     /* initially, there was no fk_society and fk_university constraint, if you are creating tables from scratch, then comment below two queries
     if constraint already added, i-e already executed the lines below, then comment them, as they'll throw an error */

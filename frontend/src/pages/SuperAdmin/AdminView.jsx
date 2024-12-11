@@ -8,6 +8,8 @@ import UpdateEntityForm from './UpdateForm.jsx'
 import AdminUsersPage from './AdminUsersPage.jsx'
 import AdminUniPage from './AdminUniPage.jsx'
 import AdminSocietyPage from './AdminSocietyPage.jsx'
+import AdminContestPage from './AdminContestPage.jsx'
+import AddContest from './AddContest.jsx'
 
 const AdminView = () => {
   const {addEvent, updateEvent, addUniversity
@@ -139,6 +141,10 @@ const AdminView = () => {
           />
         }
       />
+
+      <Route path='/events/contests/:eventId' element={<AdminContestPage/>}></Route>
+      <Route path='/events/contests/:eventId/addcontest' element={<AddContest/>}></Route>
+
       
       </Routes>
 

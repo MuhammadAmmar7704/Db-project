@@ -28,7 +28,7 @@ router.post(
 router.post(
   "/updatesociety",
   protectRoute,
-  roleMiddleware("update_society_society"),
+  roleMiddleware("update_society"),
   updateSociety
 );
 
