@@ -1,39 +1,34 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import {Box} from '@mui/material';
-import EventContext from '../../Context/eventContext/createContext.js';
-import CardContainer from './CardContainer.jsx';
+import React, { useContext, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { Box } from "@mui/material";
+import EventContext from "../../Context/eventContext/createContext.js";
+import CardContainer from "./CardContainer.jsx";
 
 const SocietyPage = () => {
   const { fetchSociety, events } = useContext(EventContext);
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [society, setSociety] = useState(null);
   const [societyEvents, setSocietyEvents] = useState(events);
 
-
   useEffect(() => {
-    
     const loadSocietyData = async () => {
-      const societyData = await fetchSociety(id); 
+      const societyData = await fetchSociety(id);
       setSociety(societyData[0]);
     };
     loadSocietyData();
     const filterEventsBySociety = (events, societyId) => {
       if (!events || !Array.isArray(events)) {
-        console.error('Invalid events data.');
+        console.error("Invalid events data.");
         return [];
       }
 
-    
-      return events.filter(event => event.society_id == societyId);
+      return events.filter((event) => event.society_id == societyId);
     };
 
     const temp = filterEventsBySociety(events, id);
 
     setSocietyEvents(temp);
-
-
-  }, [id,events]);
+  }, [id, events]);
 
   if (!society) {
     return (
@@ -44,15 +39,15 @@ const SocietyPage = () => {
   }
 
   return (
-    <Box sx={{
-      background:'url(https://www.transparenttextures.com/patterns/wood-pattern.png)',
-        minHeight: '100vh',
-        
-        padding: 20,
-        
-    }}>
+    <Box
+      sx={{
+        background: "#EEEFF2",
+        minHeight: "100vh",
 
-      <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md"  >
+        padding: 20,
+      }}
+    >
+      <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
           {society.name}
         </h1>
@@ -61,10 +56,12 @@ const SocietyPage = () => {
           <img
             src={society.image_url}
             alt={society.name}
-            className="w-full max-h-72 object-cover rounded-md mb-4 shadow-md"
+            className="w-full object-fit-cover max-h-96 min-h-56 rounded-md mb-4 shadow-md"
           />
           {/* Description */}
-          <p className="text-gray-700 text-center mb-6">{society.description}</p>
+          <p className="text-gray-700 text-center mb-6">
+            {society.description}
+          </p>
         </div>
         <div className="space-y-4">
           <div className="flex justify-between items-center border-b pb-2">
@@ -72,7 +69,9 @@ const SocietyPage = () => {
             <span className="text-gray-800">{society.university_id}</span>
           </div>
           <div className="flex justify-between items-center border-b pb-2">
-            <span className="text-gray-600 font-semibold">University name:</span>
+            <span className="text-gray-600 font-semibold">
+              University name:
+            </span>
             <span className="text-gray-800">{society.university_name}</span>
           </div>
           <div className="flex justify-between items-center border-b pb-2">
@@ -89,9 +88,12 @@ const SocietyPage = () => {
           </div>
         </div>
       </div>
-      <h2 className="text-4xl font-semibold text-center text-green-600 my-6">Events By Machine</h2>
-      <div className="w-full"><CardContainer events={societyEvents}/></div>
-      
+      <h2 className="text-4xl font-semibold text-center text-green-600 my-6">
+        Events by {society.name}
+      </h2>
+      <div className="w-full">
+        <CardContainer events={societyEvents} />
+      </div>
     </Box>
   );
 };

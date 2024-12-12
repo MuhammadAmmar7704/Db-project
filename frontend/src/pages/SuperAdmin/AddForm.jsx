@@ -101,7 +101,7 @@ const AddEntityForm = ({ entityType, fields, onSubmit }) => {
                 value={formData[field.name]}
                 onChange={handleChange}
                 required={field.required}
-                className="p-2 border border-gray-300 rounded-md"
+                className="p-2 border border-gray-300 rounded-md bg-transparent"
                 disabled={!!localStorage.getItem(field.name)} // Disable if value exists in localStorage
               />
             </div>
@@ -121,16 +121,16 @@ const AddEntityForm = ({ entityType, fields, onSubmit }) => {
                 value={formData[field.name]}
                 onChange={handleChange}
                 required={field.required}
-                className="p-2 border border-gray-300 rounded-md"
+                className="p-2 border border-gray-300 rounded-md bg-transparent"
               />
             </div>
           )
         )}
         <button
           type="submit"
-          className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all"
+          className="w-full py-2 text-lg hover:bg-[#005F73] bg-opacity-75 bg-[#007F9D] text-white rounded-md  transition-all"
         >
-          Submit
+          SUBMIT
         </button>
       </form>
     </div>

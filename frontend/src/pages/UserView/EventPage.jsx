@@ -1,23 +1,32 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import EventContext from "../../Context/eventContext/createContext.js"; 
-import ContestContext from "../../Context/uniContestRegistrationContext/createContext.js"; 
-import {Box} from '@mui/material';
-
+import EventContext from "../../Context/eventContext/createContext.js";
+import ContestContext from "../../Context/uniContestRegistrationContext/createContext.js";
+import { Box } from "@mui/material";
 
 const EventPage = () => {
-  const { id } = useParams(); 
-  const { fetchEvent, loading: eventLoading, error: eventError } = useContext(EventContext);
-  const {contests,fetchContestsByEventId, registerForContest, loading: contestLoading, error: contestError,
-    countRegistration, getContestParticipants
-   } = useContext(ContestContext); 
+  const { id } = useParams();
+  const {
+    fetchEvent,
+    loading: eventLoading,
+    error: eventError,
+  } = useContext(EventContext);
+  const {
+    contests,
+    fetchContestsByEventId,
+    registerForContest,
+    loading: contestLoading,
+    error: contestError,
+    countRegistration,
+    getContestParticipants,
+  } = useContext(ContestContext);
   const [event, setEvent] = useState(null);
   const [selectedContest, setSelectedContest] = useState(null);
   const [date, setDate] = useState(null);
 
   useEffect(() => {
     const loadEventData = async () => {
-      const eventData = await fetchEvent(id); 
+      const eventData = await fetchEvent(id);
       setEvent(eventData[0]);
       let d = new Date(eventData[0].event_date).toUTCString();
       setDate(d);
@@ -38,134 +47,149 @@ const EventPage = () => {
     }
 
     try {
-
       const data = await countRegistration(selectedContest);
       const maxPar = await getContestParticipants(selectedContest);
-    
+
       if (data.count >= maxPar) {
-        alert('Teams are Full. Your LOSS!');
+        alert("Teams are Full. Your LOSS!");
         return;
       }
       //user id will be stored in local storage
 
-      const userId = localStorage.getItem('user_id');
+      const userId = localStorage.getItem("user_id");
       await registerForContest(selectedContest, userId);
 
       alert("Registration successful!");
     } catch (error) {
       console.error("Registration failed:", error);
-      alert('Registration failed. Please try again');
+      alert("Registration failed. Please try again");
     }
   };
 
   return (
-    <Box className="px-6 py-8" Box sx={{
-      background:'url(https://www.transparenttextures.com/patterns/wood-pattern.png)',
-        minHeight: '100vh',
-    }}>
-    {(eventLoading || contestLoading) && <p>Loading...</p>}
-    {(eventError) && <p>Error: {eventError}</p>}
-    {(contestError ) && <p>Error: {contestError}</p>}
+    <Box
+      className="px-6 py-8"
+      Box
+      sx={{
+        background: "#EEEFF2",
+        minHeight: "100vh",
+      }}
+    >
+      {(eventLoading || contestLoading) && <p>Loading...</p>}
+      {eventError && <p>Error: {eventError}</p>}
+      {contestError && <p>Error: {contestError}</p>}
 
-    {
-    event && (
-      <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md" >
-        {/* Event Details */}
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
-          {event.event_name}
-        </h1>
-        <div className="flex flex-col items-center">
-          <img
-            src={event.image_url}
-            alt={event.event_name}
-            className="w-full max-h-72 object-cover rounded-md mb-4 shadow-md"
-          />
-          <p className="text-gray-700 text-center mb-6">{event.description}</p>
-        </div>
-        <div className="space-y-4">
-          <div className="flex justify-between items-center border-b pb-2">
-            <span className="text-gray-600 font-semibold">From Society:</span>
-            <span className="text-gray-800">{event.society_name}</span>
+      {event && (
+        <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
+          {/* Event Details */}
+          <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
+            {event.event_name}
+          </h1>
+          <div className="flex flex-col items-center">
+            <img
+              src={event.image_url}
+              alt={event.event_name}
+              className="w-full max-h-72 object-fit rounded-md mb-4 shadow-md"
+            />
+            <p className="text-gray-700 text-center mb-6">
+              {event.description}
+            </p>
           </div>
-          <div className="flex justify-between items-center border-b pb-2">
-            <span className="text-gray-600 font-semibold">Date of Event:</span>
-            <span className="text-gray-800">{date}</span>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center border-b pb-2">
+              <span className="text-gray-600 font-semibold">From Society:</span>
+              <span className="text-gray-800">{event.society_name}</span>
+            </div>
+            <div className="flex justify-between items-center border-b pb-2">
+              <span className="text-gray-600 font-semibold">
+                Date of Event:
+              </span>
+              <span className="text-gray-800">{date}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 font-semibold">Society ID:</span>
+              <span className="text-gray-800">{event.society_id}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 font-semibold">
+                university Name:
+              </span>
+              <span className="text-gray-800">{event.university_name}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 font-semibold">
+                university ID:
+              </span>
+              <span className="text-gray-800">{event.university_id}</span>
+            </div>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 font-semibold">Society ID:</span>
-            <span className="text-gray-800">{event.society_id}</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 font-semibold">university Name:</span>
-            <span className="text-gray-800">{event.university_name}</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 font-semibold">university ID:</span>
-            <span className="text-gray-800">{event.university_id}</span>
-          </div>
-        </div>
-          
 
-        {/* Contests Section */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Contests</h2>
-          {contests && <div>
-            { contests.length > 0 ? (
-            <ul className="space-y-4">
-              {contests.map((contest) => (
-                <li
-                  key={contest.contest_id}
-                  className="p-4 bg-gray-100 rounded-md shadow-md"
-                >
-                  <p>
-                    <strong>Contest Name:</strong> {contest.contest_name}
+          {/* Contests Section */}
+          <div className="mt-8">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Contests</h2>
+            {contests && (
+              <div>
+                {contests.length > 0 ? (
+                  <ul className="space-y-4">
+                    {contests.map((contest) => (
+                      <li
+                        key={contest.contest_id}
+                        className="p-4 bg-gray-100 rounded-md shadow-md"
+                      >
+                        <p>
+                          <strong>Contest Name:</strong> {contest.contest_name}
+                        </p>
+                        <p>
+                          <strong>Participants:</strong> {contest.participants}
+                        </p>
+                        <p>
+                          <strong>Description:</strong>{" "}
+                          {contest.description || "N/A"}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-600">
+                    No contests available for this event.
                   </p>
-                  <p>
-                    <strong>Participants:</strong> {contest.participants}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {contest.description || "N/A"}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-600">No contests available for this event.</p>
-          )}
-          </div>}
-        </div>
+                )}
+              </div>
+            )}
+          </div>
 
-        {/* Registration Section */}
-        <div className="mt-8">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">
-            Register for a Contest
-          </h3>
-          <div className="flex space-x-4 items-center">
-            <select
-              value={selectedContest || ""}
-              onChange={(e) => setSelectedContest(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 w-full"
-            >
-              <option value="" disabled>
-                Select a contest
-              </option>
-              {contests && contests.map((contest) => (
-                <option key={contest.contest_id} value={contest.contest_id}>
-                  {contest.contest_name}
+          {/* Registration Section */}
+          <div className="mt-8">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Register for a Contest
+            </h3>
+            <div className="flex space-x-4 items-center">
+              <select
+                value={selectedContest || ""}
+                onChange={(e) => setSelectedContest(e.target.value)}
+                className="border border-gray-300 rounded-md p-2 w-full"
+              >
+                <option value="" disabled>
+                  Select a contest
                 </option>
-              ))}
-            </select>
-            <button
-              onClick={handleRegister}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
-            >
-              Register
-            </button>
+                {contests &&
+                  contests.map((contest) => (
+                    <option key={contest.contest_id} value={contest.contest_id}>
+                      {contest.contest_name}
+                    </option>
+                  ))}
+              </select>
+              <button
+                onClick={handleRegister}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
+              >
+                Register
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    )}
-      </Box>
+      )}
+    </Box>
   );
 };
 

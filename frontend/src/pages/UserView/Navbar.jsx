@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import UserContext from '../../Context/userContext/createContext.js';
-import EventContext from '../../Context/eventContext/createContext.js';
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import UserContext from "../../Context/userContext/createContext.js";
+import EventContext from "../../Context/eventContext/createContext.js";
 
 const Navbar = (props) => {
-
-  const {setIsSideMenuOpen, isSideMenuOpen} = props;
-  const {logOut, isAuthenticated} = useContext(UserContext);
+  const { setIsSideMenuOpen, isSideMenuOpen } = props;
+  const { logOut, isAuthenticated } = useContext(UserContext);
   const navigate = useNavigate();
   const toggleSideMenu = () => {
     setIsSideMenuOpen(!isSideMenuOpen);
@@ -15,28 +14,31 @@ const Navbar = (props) => {
   const logOuttheUser = () => {
     logOut();
     //navigate('/login');
-  }
+  };
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredResults, setFilteredResults] = useState({ societies: [], events: [] });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredResults, setFilteredResults] = useState({
+    societies: [],
+    events: [],
+  });
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const { societies,events, fetchAllEvents, fetchAllSocieties } = useContext(EventContext);
+  const { societies, events, fetchAllEvents, fetchAllSocieties } =
+    useContext(EventContext);
 
-  useEffect(()=>{
-    if(!isAuthenticated)
-      navigate('/login');
-  }, [isAuthenticated])
+  useEffect(() => {
+    if (!isAuthenticated) navigate("/login");
+  }, [isAuthenticated]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!societies || societies.length === 0) fetchAllSocieties();
     if (!events || events.length === 0) fetchAllEvents();
-  }, [])
+  }, []);
 
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-    if (query.trim() === '') {
+    if (query.trim() === "") {
       setFilteredResults({ societies: [], events: [] });
       setShowDropdown(false);
       return;
@@ -45,29 +47,33 @@ const Navbar = (props) => {
     const filteredSocieties = societies.filter((society) =>
       society.name.toLowerCase().includes(query)
     );
-    
+
     const filteredEvents = events.filter((events) =>
       events.event_name.toLowerCase().includes(query)
-  );
-  
-    console.log(filteredEvents)
-    setFilteredResults({ societies: filteredSocieties, events: filteredEvents });
+    );
+
+    console.log(filteredEvents);
+    setFilteredResults({
+      societies: filteredSocieties,
+      events: filteredEvents,
+    });
     setShowDropdown(true);
   };
 
   const handleResultClick = () => {
-    setSearchQuery('');
+    setSearchQuery("");
     setShowDropdown(false);
   };
 
   return (
-    <div className="wrapper" >
-      <div className="top_nav" >
-        <div className="left">
-          <div className="logo">
-            <p style={{color:'#4F7942'}}>
+    <div className="wrapper">
+      <div className="top_nav ">
+        <div className="left gap-2">
+          <div className="text-white text-3xl pr-5">
+            <p style={{ color: "#FFFFFF" }}>
               <span>Socio</span>Verse
             </p>
+            {/* <p>SocioVerse</p> */}
           </div>
           <div className="search_bar relative">
             <input
@@ -75,7 +81,7 @@ const Navbar = (props) => {
               placeholder="Search"
               value={searchQuery}
               onChange={handleSearch}
-              className="input input-bordered"
+              className="input input-bordered bg-gray-100"
             />
             {showDropdown && (
               <div className="absolute bg-white border mt-2 shadow-md w-full z-50 rounded-md">
@@ -86,14 +92,17 @@ const Navbar = (props) => {
                     </h4>
                     <ul>
                       {filteredResults.societies.map((society) => (
-                          <Link
-                            to={`/userview/viewsociety/${society.society_id}`}
-                            onClick={handleResultClick}
+                        <Link
+                          to={`/userview/viewsociety/${society.society_id}`}
+                          onClick={handleResultClick}
+                        >
+                          <li
+                            key={society.society_id}
+                            className="px-3 py-2 hover:bg-gray-200"
                           >
-                            <li key={society.society_id} className="px-3 py-2 hover:bg-gray-200">
-                                {society.name}
-                            </li>
-                          </Link>
+                            {society.name}
+                          </li>
+                        </Link>
                       ))}
                     </ul>
                   </>
@@ -106,14 +115,17 @@ const Navbar = (props) => {
                     </h4>
                     <ul>
                       {filteredResults.events.map((event) => (
-                          <Link
-                            to={`/userview/viewevent/${event.event_id}`}
-                            onClick={handleResultClick}
+                        <Link
+                          to={`/userview/viewevent/${event.event_id}`}
+                          onClick={handleResultClick}
+                        >
+                          <li
+                            key={event.event_id}
+                            className="px-3 py-2 hover:bg-gray-200"
                           >
-                            <li key={event.event_id} className="px-3 py-2 hover:bg-gray-200">
-                                {event.event_name}
-                            </li>
-                          </Link>
+                            {event.event_name}
+                          </li>
+                        </Link>
                       ))}
                     </ul>
                   </>
@@ -126,42 +138,49 @@ const Navbar = (props) => {
               </div>
             )}
           </div>
-
         </div>
         <div className="right">
           <ul>
             <li>
-              <button className='btn btn-outline text-white bg-[#4F7942] hover:bg-slate-600 hover:text-[#4F7942]' onClick={logOuttheUser} >LogOut</button>
+              <button
+                className="btn btn-outline hover:text-white  text-black bg-[#fffffF] hover:bg-slate-600 hover:text-[#4F7942] border-0 px-5"
+                onClick={logOuttheUser}
+              >
+                LOGOUT
+              </button>
             </li>
           </ul>
         </div>
       </div>
-      <div className="bottom_nav" style={{background:'#4F7942'}}>
+      <div className="bottom_nav " style={{ background: "#94d2bd" }}>
         <ul className="flex space-x-6">
-          <li>
+          <li className="hover:bg-teal-600">
             <Link to="/userview">Home</Link>
           </li>
 
           {/* Browse Societies */}
-          <li >
-          <div >
-            <button
-              className="btn btn-primary"
-              onClick={toggleSideMenu}
-            >
-              Browse Societies
-            </button>
-          </div>
+          <li>
+            <div>
+              <button
+                className="btn btn-primary bg-transparent border-0 text-white hover:bg-slate-600"
+                onClick={toggleSideMenu}
+              >
+                BROWSE SOCIETIES
+              </button>
+            </div>
           </li>
 
-    {/* {browse societies end} */}
-          
-          
-          <li>
-            <Link to="viewallevents">Events</Link>
+          {/* {browse societies end} */}
+
+          <li className="">
+            <button className="hover:bg-teal-600 hover:text-white">
+              <Link to="viewallevents" className="">
+                Events
+              </Link>
+            </button>
           </li>
-          <li>
-            <Link to="contactus">Contact Us</Link>
+          <li className="hover:bg-teal-600 link-">
+            <Link to="contactus">CONTACT US</Link>
           </li>
         </ul>
       </div>

@@ -6,14 +6,14 @@
   box-sizing: border-box;
   list-style: none;
   text-decoration: none;
-  font-family: "Josefin Sans", sans-serif;  
+  font-family: "Josefin Sans", sans-serif;
 }
 
 .wrapper .top_nav {
   margin-top: 5px;
   width: 100%;
   height: 70px;
-  background: #fff;
+  background: #005f73;
   padding: 0 50px;
   display: flex;
   justify-content: space-between;
@@ -64,15 +64,14 @@
   transition: background 0.3s, color 0.3s;
 }
 
-
 .wrapper .top_nav .right ul li a:hover {
-  background: #4F7942;
+  background: #4f7942;
   color: #fff;
 }
 
 .wrapper .bottom_nav {
   width: 100%;
-  background: #4F7942;
+  background: #007F9D;
   height: 50px;
   padding: 0 50px;
 }
@@ -100,6 +99,6 @@
 
 .wrapper .bottom_nav ul li a:hover {
   background: #494949;
-  color: #4F7942;
+  color: #4f7942;
   border-radius: 5px;
 }

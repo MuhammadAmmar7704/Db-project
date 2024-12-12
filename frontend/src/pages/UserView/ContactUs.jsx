@@ -1,42 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { TextField, Button, Box, Typography, Container } from '@mui/material';
-
-const getRandomPattern = () => {
-  const patterns = [
-    'linear-gradient(45deg, #f3ec78, #af4261)', // Gradient
-    'url(https://www.transparenttextures.com/patterns/wood-pattern.png)', // Wood texture
-    'url(https://www.transparenttextures.com/patterns/diag-stripes.png)', // Diagonal stripes
-    'url(https://www.transparenttextures.com/patterns/asfalt.png)', // Asphalt texture
-    'linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%)', // Pink gradient
-  ];
-  return patterns[Math.floor(Math.random() * patterns.length)];
-};
+import React, { useState, useEffect } from "react";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Container,
+  Grid,
+} from "@mui/material";
+// import Grid from "@mui/material";
 
 const ContactUs = () => {
-  const [backgroundPattern, setBackgroundPattern] = useState('');
-
-  useEffect(() => {
-    setBackgroundPattern('url(https://www.transparenttextures.com/patterns/wood-pattern.png)');
-  }, []);
-
   return (
     <Box
       sx={{
-        background: backgroundPattern, 
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        background: "#E8E8E8",
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         padding: 2,
       }}
     >
-      <Container maxWidth="sm" sx={{ backgroundColor: 'white', padding: 4, borderRadius: 2, boxShadow: 3 }}>
-        <Typography variant="h4" align="center" gutterBottom>
+      <Container
+        maxWidth="sm"
+        sx={{
+          backgroundColor: "white",
+          padding: 4,
+          borderRadius: 2,
+          boxShadow: 3,
+        }}
+      >
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          className="text-gray-600"
+        >
           Contact Us
         </Typography>
-        
+
         <form>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} className="">
             <Grid item xs={12}>
               <TextField
                 label="Name"
@@ -44,6 +48,7 @@ const ContactUs = () => {
                 fullWidth
                 required
                 margin="normal"
+                className=""
               />
             </Grid>
             <Grid item xs={12}>
@@ -73,7 +78,8 @@ const ContactUs = () => {
                 color="primary"
                 fullWidth
                 type="submit"
-                sx={{ padding: '10px' }}
+                sx={{ padding: "10px" }}
+                className="hover:bg-[#005F73] bg-opacity-75 bg-[#007F9D]"
               >
                 Send Message
               </Button>

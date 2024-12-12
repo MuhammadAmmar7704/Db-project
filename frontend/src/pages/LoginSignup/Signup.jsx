@@ -13,10 +13,10 @@ const Signup = () => {
     university_id: "",
   });
 
-  const {universities, fetchAllUniversities} = useContext(UCRContext)
-  const {signup} = useContext(UserContext);
+  const { universities, fetchAllUniversities } = useContext(UCRContext);
+  const { signup } = useContext(UserContext);
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,14 +57,12 @@ const Signup = () => {
     }
 
     setErrors({});
-    
-    
+
     try {
-      
       const status = await signup(inputs);
-      if(status == 201){
-        setMessage('');
-        navigate('/login');
+      if (status == 201) {
+        setMessage("");
+        navigate("/login");
       }
       setMessage(status.response.data.error);
     } catch (error) {
@@ -89,23 +87,19 @@ const Signup = () => {
         className="flex flex-col items-center justify-center mx-auto h-screen w-screen bg-slate-300"
         style={{ border: "2px solid red" }}
       >
-        <div className="max-w-md min-w-[20rem] p-6 rounded-3xl shadow-2xl bg-fuchsia-50 backdrop-filter backdrop-blur-lg">
+        <div className="max-w-md min-w-[20rem] p-6 rounded-3xl shadow-2xl bg-gray-100 backdrop-filter backdrop-blur-lg">
           <h1 className="text-3xl font-semibold text-center text-gray-300">
-            SignUp
+            <span className="text-gray-600">Signup - </span>
             <span className="text-blue-500"> Socio</span>
             <span className="text-red-500">Verse</span>
           </h1>
 
-          {message && <p className="text-red-500 font-bold">
-            {message}
-          </p>}
+          {message && <p className="text-red-500 font-bold">{message}</p>}
 
           <form onSubmit={handleSubmit}>
             <div>
               <label className="label p-2">
-                <span className="text-base label-text font-semibold">
-                  Username
-                </span>
+                <span className="text-base label-text text-gray-600 font-semibold"></span>
               </label>
               <input
                 type="text"
@@ -113,7 +107,7 @@ const Signup = () => {
                 placeholder="Enter Username"
                 value={inputs.username}
                 onChange={handleChange}
-                className="w-full input h-10 input-bordered"
+                className="w-full input h-10 input-bordered bg-transparent"
               />
               {errors.username && (
                 <p className="text-red-600 font-bold">{errors.username}</p>
@@ -122,7 +116,9 @@ const Signup = () => {
 
             <div>
               <label className="label p-2">
-                <span className="text-base label-text font-semibold">Email</span>
+                <span className="text-base label-text font-semibold">
+                  {/* Email */}
+                </span>
               </label>
               <input
                 type="email"
@@ -130,7 +126,7 @@ const Signup = () => {
                 placeholder="Enter Email"
                 value={inputs.email}
                 onChange={handleChange}
-                className="w-full input h-10 input-bordered"
+                className="w-full input h-10 input-bordered bg-transparent"
               />
               {errors.email && (
                 <p className="text-red-600 font-bold">{errors.email}</p>
@@ -139,8 +135,8 @@ const Signup = () => {
 
             <div>
               <label className="label">
-                <span className="text-base label-text font-semibold">
-                  Password
+                <span className="text-base label-text font-semibold text-gray-600">
+                  {/* PASSWORD */}
                 </span>
               </label>
               <input
@@ -148,7 +144,7 @@ const Signup = () => {
                 name="password"
                 value={inputs.password}
                 onChange={handleChange}
-                className="w-full input input-bordered h-10"
+                className="w-full input input-bordered h-10 bg-white"
                 placeholder="Enter Password"
               />
               {errors.password && (
@@ -159,7 +155,7 @@ const Signup = () => {
             <div>
               <label className="label">
                 <span className="text-base label-text font-semibold">
-                  Confirm Password
+                  {/* Confirm Password */}
                 </span>
               </label>
               <input
@@ -167,7 +163,7 @@ const Signup = () => {
                 name="confirmpassword"
                 value={inputs.confirmpassword}
                 onChange={handleChange}
-                className="w-full input input-bordered h-10"
+                className="w-full input input-bordered h-10 bg-white"
                 placeholder="Confirm Password"
               />
               {errors.confirmpassword && (
@@ -180,11 +176,11 @@ const Signup = () => {
             {/* Are you a Student? */}
             <div>
               <label className="label p-2">
-                <span className="text-base label-text font-semibold">
+                <span className="text-base label-text font-semibold text-gray-500">
                   Are you a Student?
                 </span>
               </label>
-              <div className="flex space-x-4">
+              <div className="flex ml-3 space-x-4 justify-start items-center">
                 <label>
                   <input
                     type="radio"
@@ -233,19 +229,19 @@ const Signup = () => {
                   ))}
                 </select>
                 {errors.university_id && (
-                  <p className="text-red-600 font-bold">{errors.university_id}</p>
+                  <p className="text-red-600 font-bold">
+                    {errors.university_id}
+                  </p>
                 )}
               </div>
             )}
 
             <div>
-
-
               <button
-                className="btn btn-block btn-sm mt-2 border border-slate-700 font-semibold"
+                className="btn btn-block btn-sm mt-2 border-0 bg-[#005F73] text-white bg-opacity-70 hover:bg-[#005F73] font-semibold"
                 type="submit"
               >
-                Signup
+                SIGNUP
               </button>
             </div>
           </form>
