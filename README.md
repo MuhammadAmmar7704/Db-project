@@ -40,7 +40,7 @@ Ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   [https://github.com/yourusername/SocioVerse.git](https://github.com/MuhammadAmmar7704/Db-project)
+   (https://github.com/MuhammadAmmar7704/Db-project)
    ```
 2. Navigate to the project directory:
    ```bash
