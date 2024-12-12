@@ -27,10 +27,9 @@ Here’s a GitHub README draft for your project. You can edit and include images
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: ReactJS with Bootstrap
+- **Frontend**: ReactJS with Tailwind
 - **Backend**: ExpressJS (Node.js)
 - **Database**: NeonDB(PostgreSQL)
-- **Hosting**: Vercel / Firebase / GitHub Pages
 
 ---
 
