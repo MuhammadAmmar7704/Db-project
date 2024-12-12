@@ -1,7 +1,3 @@
-Here’s a GitHub README draft for your project. You can edit and include images later as you wish:
-
----
-
 # SocioVerse
 
 **SocioVerse** is a comprehensive platform designed to streamline society and event management across universities. The platform allows users to explore upcoming and past events, browse societies, and manage roles such as university administrators, society heads, and more.
