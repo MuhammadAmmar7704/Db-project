@@ -101,9 +101,6 @@ https://imgur.com/kzejMwU
 
 
 
-## 📧 Contact
-
-For any questions, feel free to contact the team:
-- **Lead Developer**: Muhammad Ammar
-- **Team Members**: Rafay, Muhammad Anas, Ibrahim Abdullah
+## 📧 Developers
+- **Team Members**: Muhammad Ammar, Muhammad Anas, Ibrahim Abdullah
 
